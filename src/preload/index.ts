@@ -3,7 +3,7 @@ import { electronAPI } from '@electron-toolkit/preload';
 
 // Custom APIs for renderer
 const api = {
-  invoke: (data: string) => ipcRenderer.invoke('term:data', data),
+  invoke: (uid: string | undefined, data: string) => ipcRenderer.invoke('term:data', uid, data),
   initPtyProcess: (data: string) => ipcRenderer.invoke('term:init', data),
   resizePty: (data) => ipcRenderer.invoke('pty:resize', data),
   onResize: (callback) => ipcRenderer.on('term:resize', callback),

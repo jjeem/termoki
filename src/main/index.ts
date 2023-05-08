@@ -5,11 +5,17 @@ import { IPty } from 'node-pty';
 import initPtyProcess from '../pty/pty';
 import icon from '../../resources/icon.png?asset';
 
-const processes: IPty[] = [];
+interface PtyProcess {
+  uid: string;
+  shell: IPty;
+}
+
+const processes: PtyProcess[] = [];
 
 function createWindow() {
-  console.log('✨✨✨ creating window ✨✨✨');
   // Create the browser window.
+  console.log('✨✨✨ creating window ✨✨✨');
+
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 480,
@@ -62,45 +68,45 @@ app.whenReady().then(() => {
     createdWindow.webContents.send('term:resize');
   });
 
-  // const ptyProcess = pty.spawn(shell, [], {
-  //   name: 'xterm-color',
-  //   cols: 80,
-  //   rows: 30,
-  //   cwd: process.env.HOME
-  //   // env: process.env
-  // });
+  ipcMain.handle('pty:resize', (_event, data) => {
+    const { uid, cols, rows } = data;
+    console.table(processes);
+    console.log(uid);
+    getProcessWithUid(uid)?.shell.resize(cols, rows);
+  });
 
-  // ptyProcess.onData((data) => {
-  //   if (!data || !data.trim()) return;
-  //   console.log('pty onData: ', data);
-  //   createdWindow.webContents.send('response', data);
-  // });
-
-  // ptyProcess.write('ls\r');
-
-  ipcMain.handle('term:data', async (event, data) => {
-    // console.log(event);
+  ipcMain.handle('term:data', async (_event, uid, data) => {
     console.log('inside main term:data: ', data);
-    // ptyProcess.write(data + '\r');
-    processes[0]?.write(data + '\r');
+    getProcessWithUid(uid)?.shell.write(data);
     return 'done';
   });
 
-  /*TODO: REMOVE term:init and replace it with term:resume 
+  /* TODO: REMOVE term:init and replace it with term:resume 
           to avoid creating new pty on refresh
   */
-  ipcMain.handle('term:init', async (event, data) => {
-    // console.log('term:init ', event, data);
+  ipcMain.handle('term:init', async (_event, id) => {
     const pty = initPtyProcess();
-    // processes.push(pty);
-    processes[0]?.kill();
-    processes[0] = pty;
+    // TODO: use uuid
+    const uid = (id || processes.length.toString()) as string;
+
+    const old = getProcessWithUid(uid);
+    if (old) {
+      old.shell.kill();
+      old.uid = '';
+    }
+
+    console.log('creating process with uid: ', uid);
+
+    processes.push({
+      uid,
+      shell: pty
+    });
+
     pty.onData((data) => {
-      if (!data || !data.trim()) return;
-      // console.log('pty onData: ', data);
       createdWindow.webContents.send('term:response', data);
     });
-    return 'done';
+
+    return uid;
   });
 
   app.on('activate', function () {
@@ -114,7 +120,7 @@ app.whenReady().then(() => {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
-  processes.forEach((pty) => pty.kill());
+  processes.forEach((process) => process.shell.kill());
   if (process.platform !== 'darwin') {
     app.quit();
   }
@@ -122,3 +128,5 @@ app.on('window-all-closed', () => {
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
+
+const getProcessWithUid = (uid: string) => processes.find((p) => p.uid === uid);
