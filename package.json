@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Terminal emulator with web tech",
   "author": "jeem",
+  "license": "MIT",
   "main": "./out/main/index.js",
   "scripts": {
     "format": "prettier --write .",
