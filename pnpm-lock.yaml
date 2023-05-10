@@ -13,6 +13,9 @@ dependencies:
   node-pty:
     specifier: ^0.10.1
     version: 0.10.1
+  uuid:
+    specifier: ^9.0.0
+    version: 9.0.0
   xterm:
     specifier: ^5.1.0
     version: 5.1.0
@@ -3090,6 +3093,11 @@ packages:
 
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
+    dev: false
+
+  /uuid@9.0.0:
+    resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
+    hasBin: true
     dev: false
 
   /verror@1.10.1:

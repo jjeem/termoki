@@ -2,6 +2,8 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron';
 import { join } from 'path';
 import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import { IPty } from 'node-pty';
+import { v4 as uuidv4 } from 'uuid';
+
 import initPtyProcess from '../pty/pty';
 import icon from '../../resources/icon.png?asset';
 
@@ -85,15 +87,13 @@ app.whenReady().then(() => {
           to avoid creating new pty on refresh
   */
   ipcMain.handle('term:init', async (_event, id) => {
-    const pty = initPtyProcess();
-    // TODO: use uuid
-    const uid = (id || processes.length.toString()) as string;
-
-    const old = getProcessWithUid(uid);
+    const old = getProcessWithUid(id);
     if (old) {
-      old.shell.kill();
-      old.uid = '';
+      throw new Error(`Cannot create a new pty when there's existing one`);
     }
+
+    const pty = initPtyProcess();
+    const uid = uuidv4() as string;
 
     console.log('creating process with uid: ', uid);
 
