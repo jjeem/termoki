@@ -20,4 +20,4 @@ Or if you're on **Windows**:
 .\node_modules\.bin\electron-rebuild.cmd
 ```
 
-Refrence [issue](https://stackoverflow.com/questions/46384591/node-was-compiled-against-a-different-node-js-version-using-node-module-versio/52796884#52796884)
+Reference [issue](https://stackoverflow.com/questions/46384591/node-was-compiled-against-a-different-node-js-version-using-node-module-versio/52796884#52796884)
