@@ -1,0 +1,55 @@
+{
+  "name": "termoki",
+  "productName": "Termoki",
+  "version": "0.5.0",
+  "author": "Jad Alkheder (@jjeem)",
+  "description": "Terminal emulator with web tech",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jjeem/termoki.git"
+  },
+  "keywords": [
+    "terminal"
+  ],
+  "main": "dist/index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "lint": "biome check ./src",
+    "lint:fix": "biome check . --apply-unsafe",
+    "format": "biome format . --write"
+  },
+  "dependencies": {
+    "detect-shell": "^1.0.2",
+    "electron-squirrel-startup": "^1.0.0",
+    "node-pty": "^1.0.0",
+    "uuid": "^9.0.0",
+    "xterm": "^5.3.0",
+    "xterm-addon-fit": "^0.8.0",
+    "xterm-addon-unicode11": "^0.6.0",
+    "xterm-addon-webgl": "^0.16.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.1.2",
+    "@electron-forge/cli": "^6.4.2",
+    "@electron-forge/maker-deb": "^6.4.2",
+    "@electron-forge/maker-rpm": "^6.4.2",
+    "@electron-forge/maker-squirrel": "^6.4.2",
+    "@electron-forge/maker-zip": "^6.4.2",
+    "@electron-forge/plugin-auto-unpack-natives": "^6.4.2",
+    "@electron-forge/publisher-github": "^6.4.2",
+    "@electron/rebuild": "^3.3.0",
+    "@rollup/plugin-node-resolve": "^15.2.1",
+    "@types/uuid": "^9.0.4",
+    "electron": "^25.8.1",
+    "typescript": "^5.2.2",
+    "vite": "^4.4.9",
+    "vite-plugin-electron": "^0.14.1"
+  },
+  "engines": {
+    "node": ">=18.15.0"
+  }
+}

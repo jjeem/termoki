@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ES2020",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "baseUrl": ".",
+    "outDir": "dist"
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "tsconfig.web.json"
+    },
+    {
+      "path": "tsconfig.node.json"
+    }
+  ]
+}

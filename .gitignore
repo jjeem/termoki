@@ -1,0 +1,15 @@
+# Logs
+*.log
+
+# Dependency directories
+node_modules/
+
+# environment variables file
+.env
+
+# Vite
+.vite/
+dist/
+
+# Electron-Forge
+out/

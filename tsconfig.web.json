@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "types": ["./src/preload/index.d.ts"]
+  },
+  "include": ["./src/preload/**/*.ts", "./src/ui/**/*.ts"]
+}
