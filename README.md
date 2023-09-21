@@ -1,23 +1,23 @@
-# Termoki
-A terminal emulator built with web tech (Electronjs and TypeScript)
+# Termoki  
 
+<img alt="logo" height=150 src="media/icon.png" >
+
+A terminal emulator built with web tech (Electronjs and TypeScript)  
+
+<br>
 
 ## Installation
-Go to [releases](https://github.com/jjeem/termoki/releases)
 
-## Note for setting up development environment
-After postinstall script, node-pty is being built for wrong NODE_MODULE_VERSION=116
+  ### 1. Through Installers
+  - Go to [releases](https://github.com/jjeem/termoki/releases)
+  - Choose the version (latest version is recommended)
+  - Click on `Assets`
+  - Pick the installer that suits your operating system
 
-So you may need to re-run `electron-rebuild` whenever there is a change to your `node_modules`:
+  ### 2. Build manually
+  Follow the steps for preparing local setup and packaging in the contribute [guide](./docs/CONTRIBUTE.md)
 
-```sh
-$(npm bin)/electron-rebuild
-```
+## Contribute
 
-Or if you're on **Windows**:
+see [CONTRIBUTE.md](./docs/CONTRIBUTE.md)
 
-```sh
-.\node_modules\.bin\electron-rebuild.cmd
-```
-
-Reference [issue](https://stackoverflow.com/questions/46384591/node-was-compiled-against-a-different-node-js-version-using-node-module-versio/52796884#52796884)

@@ -3,7 +3,7 @@ import createHTMLElement from "./utils/createElement";
 import "xterm/css/xterm.css";
 import "./assets/styles.css";
 // @ts-ignore TODO: declare png & svg
-import logo from "./assets/icon.png";
+import logo from "media/icon.png";
 import type { Shell } from "./types.ts";
 
 const api = window.api;
