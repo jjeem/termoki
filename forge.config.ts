@@ -1,4 +1,4 @@
-module.exports = {
+const config = {
   packagerConfig: {
     // Do not include in the build src
     ignore: [
@@ -7,24 +7,36 @@ module.exports = {
       /^\/.github/,
       /(biome.json)|(.gitignore)|(vite.config.ts)|(forge.config.ts)|(tsconfig.*)/,
     ],
+    icon: "./media/logo",
+    appCopyright: "Copyright (c) 2023 Jad Alkheder",
   },
-  rebuildConfig: {},
   makers: [
     {
       name: "@electron-forge/maker-squirrel",
-      config: {},
+      config: {
+        authors: "jeem",
+      },
     },
     {
       name: "@electron-forge/maker-zip",
+      config: {
+        authors: "jeem",
+      },
       platforms: ["darwin"],
     },
     {
       name: "@electron-forge/maker-deb",
-      config: {},
+      config: {
+        authors: "jeem",
+      },
     },
     {
       name: "@electron-forge/maker-rpm",
-      config: {},
+      config: {
+        authors: "jeem",
+      },
     },
   ],
 };
+
+module.exports = config;

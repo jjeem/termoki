@@ -1,6 +1,6 @@
 # Termoki  
 
-<img alt="logo" height=150 src="media/icon.png" >
+<img alt="logo" height=150 src="media/logo.png" >
 
 A terminal emulator built with web tech (Electronjs and TypeScript)  
 

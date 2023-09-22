@@ -1,7 +1,7 @@
 {
   "name": "termoki",
   "productName": "Termoki",
-  "version": "0.5.0",
+  "version": "0.5.0-alpha",
   "author": "Jad Alkheder (@jjeem)",
   "description": "Terminal emulator with web tech",
   "repository": {
@@ -45,6 +45,8 @@
     "@rollup/plugin-node-resolve": "^15.2.1",
     "@types/uuid": "^9.0.4",
     "electron": "^25.8.1",
+    "esbuild": "^0.19.3",
+    "esbuild-register": "^3.5.0",
     "typescript": "^5.2.2",
     "vite": "^4.4.9",
     "vite-plugin-electron": "^0.14.1"

@@ -3,6 +3,8 @@ import { detectAvailableShells } from "detect-shell";
 import { join } from "path";
 import ShellProcess from "./pty/ShellProcess";
 import { createIPCMainHandler } from "./ipc";
+// @ts-ignore
+import logo from '../../media/logo.png'
 
 /**
  * handle windows.squirrel events
@@ -24,6 +26,7 @@ function createWindow() {
   console.log("✨✨✨ creating window ✨✨✨");
 
   const mainWindow = new BrowserWindow({
+    icon: logo,
     width: INITIAL_WINDOW_WIDTH,
     height: INITIAL_WINDOW_HEIGHT,
     frame: false,
