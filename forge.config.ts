@@ -29,6 +29,18 @@ const config = {
       name: "@electron-forge/maker-rpm",
     },
   ],
+  publishers: [
+    {
+      name: '@electron-forge/publisher-github',
+      config: {
+        repository: {
+          owner: 'jjeem',
+          name: 'termoki'
+        },
+        prerelease: true
+      }
+    }
+  ]
 };
 
 module.exports = config;

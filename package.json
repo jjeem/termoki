@@ -18,6 +18,7 @@
     "build": "vite build",
     "package": "electron-forge package",
     "make": "electron-forge make",
+    "publish": "electron-forge publish",
     "lint": "biome check ./src",
     "lint:fix": "biome check . --apply-unsafe",
     "format": "biome format . --write"
