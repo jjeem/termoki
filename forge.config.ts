@@ -9,6 +9,7 @@ const config = {
     ],
     icon: "./media/logo",
     appCopyright: "Copyright (c) 2023 Jad Alkheder",
+    executableName: "termoki"
   },
   makers: [
     {
@@ -19,22 +20,13 @@ const config = {
     },
     {
       name: "@electron-forge/maker-zip",
-      config: {
-        authors: "jeem",
-      },
       platforms: ["darwin"],
     },
     {
       name: "@electron-forge/maker-deb",
-      config: {
-        authors: "jeem",
-      },
     },
     {
       name: "@electron-forge/maker-rpm",
-      config: {
-        authors: "jeem",
-      },
     },
   ],
 };
