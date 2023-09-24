@@ -11,16 +11,10 @@
   > [!NOTE]
   > You might run into error about node-pty being built with wrong NODE_MODULE_VERSION=116
 
-  You may need to re-run `electron-rebuild` whenever there is a change to your `node_modules`:
+  You may need to re-run `electron-rebuild`. You can do that with postinstall script:
    
   ```sh
-  $(npm bin)/electron-rebuild
-  ```
-  
-  Or if you're on **Windows**:
-  
-  ```sh
-  .\node_modules\.bin\electron-rebuild.cmd
+  pnpm run postinstall
   ```
   
   Reference [issue](https://stackoverflow.com/questions/46384591/node-was-compiled-against-a-different-node-js-version-using-node-module-versio/52796884#52796884)

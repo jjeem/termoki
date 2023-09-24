@@ -21,7 +21,8 @@
     "publish": "electron-forge publish",
     "lint": "biome check ./src",
     "lint:fix": "biome check . --apply-unsafe",
-    "format": "biome format . --write"
+    "format": "biome format . --write",
+    "postinstall": "pnpm exec electron-rebuild"
   },
   "dependencies": {
     "detect-shell": "^1.0.2",
@@ -31,7 +32,8 @@
     "xterm": "^5.3.0",
     "xterm-addon-fit": "^0.8.0",
     "xterm-addon-unicode11": "^0.6.0",
-    "xterm-addon-webgl": "^0.16.0"
+    "xterm-addon-webgl": "^0.16.0",
+    "xterm-webfont": "^2.0.0"
   },
   "devDependencies": {
     "@biomejs/biome": "1.1.2",

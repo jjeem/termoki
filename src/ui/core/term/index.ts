@@ -2,6 +2,7 @@ import { Terminal, type ITerminalOptions } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 import { WebglAddon } from "xterm-addon-webgl";
 import { Unicode11Addon } from "xterm-addon-unicode11";
+import * as XtermWebfont from "xterm-webfont";
 import SplitPane from "../split/SplitPane";
 import Tab from "../tab";
 import createHTMLElement from "../../utils/createElement";
@@ -12,8 +13,9 @@ const config: ITerminalOptions = {
   cursorBlink: true,
   allowTransparency: true,
   allowProposedApi: true,
-  fontFamily: "Consolas",
+  fontFamily: "Roboto-mono, monospace",
   fontSize: 14,
+  letterSpacing: 0,
   theme: {
     background: "#2E3440",
     foreground: "#F8F8F0",
@@ -48,6 +50,7 @@ export class Term {
   private fitAddon = new FitAddon();
   private webglAddon = new WebglAddon();
   private unicode11Addon = new Unicode11Addon();
+  private webfontAddon = new XtermWebfont();
 
   container: HTMLDivElement = createHTMLElement("div", "term-conatiner-fit");
   splitPane?: SplitPane;
@@ -66,6 +69,7 @@ export class Term {
 
     this.xterm.loadAddon(this.fitAddon);
     this.xterm.loadAddon(this.unicode11Addon);
+    this.xterm.loadAddon(this.webfontAddon);
     this.loadWebGl();
 
     this.xterm.unicode.activeVersion = "11";
