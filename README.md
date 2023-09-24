@@ -8,9 +8,12 @@ A terminal emulator built with web tech (Electronjs and TypeScript)
 
 ## Installation
 
+  > [!NOTE]
+  > Currently only **Windows** is supported. Support for other platforms is coming later
+
   ### 1. Through Installers
   - Go to [releases](https://github.com/jjeem/termoki/releases)
-  - Choose the version (latest version is recommended)
+  - Choose the version (latest stable version is recommended)
   - Click on `Assets`
   - Pick the installer that suits your operating system
 
