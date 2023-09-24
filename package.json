@@ -21,7 +21,8 @@
     "publish": "electron-forge publish",
     "lint": "biome check ./src",
     "lint:fix": "biome check . --apply-unsafe",
-    "format": "biome format . --write"
+    "format": "biome format . --write",
+    "postinstall": "pnpm exec electron-rebuild"
   },
   "dependencies": {
     "detect-shell": "^1.0.2",
