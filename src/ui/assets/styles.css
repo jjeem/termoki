@@ -1,3 +1,13 @@
+@font-face {
+  font-family: "Roboto-mono";
+  src: url("./fonts/Roboto-mono/static/RobotoMono-Regular.ttf"),
+       url("./fonts/Roboto-mono/static/RobotoMono-Thin.ttf"),
+       url("./fonts/Roboto-mono/static/RobotoMono-Bold.ttf"),
+       url("./fonts/Roboto-mono/static/RobotoMono-Italic.ttf"),
+       url("./fonts/Roboto-mono/static/RobotoMono-ThinItalic.ttf"),
+       url("./fonts/Roboto-mono/static/RobotoMono-BoldItalic.ttf");
+}
+
 :root {
   --main-bg: #2e3440;
   --tab-bg: #011627;
@@ -6,6 +16,7 @@
   --resizer: #2c73dd9c;
   --scroll-thumb-bg: #7ca0a74d;
   --scroll-thumb-hover: #7cc8d7a4;
+  font-family: Roboto-mono;
 }
 
 *,

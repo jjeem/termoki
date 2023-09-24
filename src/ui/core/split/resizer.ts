@@ -31,6 +31,7 @@ export const createResizeHandler = (
     "split-pane__resizer-vertical",
   ] as const;
   const directionValues = type === "HORIZONTAL" ? horizontal : vertical;
+  const MINMUM_BOX_SIZE = 75;
 
   const resizer = createHTMLElement(
     "div",
@@ -91,8 +92,8 @@ export const createResizeHandler = (
       ((resizerPosition - e[directionValues[1]]) * 100) / containerWidth;
 
     // check if minimum size reached
-    if (distance > 0 && box1Size <= 75) return;
-    if (distance < 0 && box2Size <= 75) return;
+    if (distance > 0 && box1Size <= MINMUM_BOX_SIZE) return;
+    if (distance < 0 && box2Size <= MINMUM_BOX_SIZE) return;
 
     const box1FlexBasisPercent = ((box1Size * 100) / containerWidth).toFixed(0);
 
