@@ -18,11 +18,11 @@ A terminal emulator built with web tech (Electronjs and TypeScript)
   - Pick the installer that suits your operating system
 
   ### 2. Build manually
-  Follow the steps for preparing local setup and packaging in the contribute [guide](./docs/CONTRIBUTE.md)
+  Follow the steps for preparing local setup and packaging in the contribute [guide](./CONTRIBUTING.md)
 
 <br>
 
 ## Contribute
 
-see [CONTRIBUTE.md](./docs/CONTRIBUTE.md)
+see [CONTRIBUTING.md](./CONTRIBUTING.md)
 
