@@ -12,7 +12,7 @@ const config: ITerminalOptions = {
   cursorBlink: true,
   allowTransparency: true,
   allowProposedApi: true,
-  fontFamily: "Consolas",
+  fontFamily: "Consolas, Menlo, Courier New, monospace",
   fontSize: 14,
   letterSpacing: 0,
   theme: {
