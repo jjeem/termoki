@@ -39,7 +39,7 @@ electronApp.whenReady().then(() => {
   // for applications and their menu bar to stay active until the user quits
   // explicitly with Cmd + Q.
   electronApp.on("window-all-closed", () => {
-    termokiApp.shellProcess.forEach((p) => {
+    termokiApp.shellProcesses.forEach((p) => {
       p.dispose();
     });
 

@@ -26,17 +26,18 @@ const defaultWindowOptions: BrowserWindowConstructorOptions = {
 export default function createWindow(
   options?: BrowserWindowConstructorOptions,
 ) {
-  const mainWindow = new BrowserWindow({
+  const window = new BrowserWindow({
     ...defaultWindowOptions,
     ...options,
   });
 
-  mainWindow.on("ready-to-show", () => {
-    mainWindow.show();
+  window.on("ready-to-show", () => {
+    window.show();
   });
 
-  mainWindow.webContents.setWindowOpenHandler((details) => {
+  window.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url);
+
     return {
       action: "deny",
     };
@@ -44,11 +45,11 @@ export default function createWindow(
 
   // Load the remote URL for development or the local html file for production.
   if (process.env.VITE_DEV_SERVER_URL) {
-    mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL);
+    window.loadURL(process.env.VITE_DEV_SERVER_URL);
   } else {
     // Load your file
-    mainWindow.loadFile("dist/index.html");
+    window.loadFile("dist/index.html");
   }
 
-  return mainWindow;
+  return window;
 }
