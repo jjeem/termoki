@@ -1,7 +1,9 @@
 import { BrowserWindow } from "electron";
 import { IPty, IPtyForkOptions, IWindowsPtyForkOptions, spawn } from "node-pty";
 
-const defaultOptions = {
+type PtySpwanOptions = IPtyForkOptions | IWindowsPtyForkOptions;
+
+const defaultOptions: PtySpwanOptions = {
   name: "xterm-color",
   cols: 80,
   rows: 30,
@@ -14,25 +16,26 @@ const defaultOptions = {
   useConpty: false,
 };
 
-class ShellProcess {
+export default class ShellProcess {
   static idPointer = 1;
   id = ShellProcess.idPointer++;
   shell: IPty;
   private readonly window: BrowserWindow;
-  private disposals: (() => void)[] = [];
+  private disposers: (() => void)[] = [];
 
   constructor(
     window: BrowserWindow,
     shell: string,
     args: string | string[] = [],
-    options: IPtyForkOptions | IWindowsPtyForkOptions = defaultOptions,
+    options: PtySpwanOptions = defaultOptions,
   ) {
     this.window = window;
     this.shell = spawn(shell, args, options);
+
     this.subscribeToEvents();
   }
 
-  subscribeToEvents() {
+  private subscribeToEvents() {
     const { dispose: dataListenerDispose } = this.shell.onData((data) => {
       this.window.webContents.send(`term:response:${this.id}`, data);
     });
@@ -41,13 +44,11 @@ class ShellProcess {
       this.window.webContents.send(`term:exit:${this.id}`, e);
     });
 
-    this.disposals.push(dataListenerDispose, exitListenerDispose);
+    this.disposers.push(dataListenerDispose, exitListenerDispose);
   }
 
   dispose() {
-    this.disposals.forEach((dispose) => dispose());
+    this.disposers.forEach((dispose) => dispose());
     this.shell.kill();
   }
 }
-
-export default ShellProcess;
