@@ -1,7 +1,7 @@
 import createHTMLElement from "./createElement";
 
 type Dropdown = {
-  el: HTMLElement;
+  element: HTMLElement;
 };
 
 type DropdownItem = {
@@ -13,19 +13,24 @@ type DropdownProps = {
   list: DropdownItem[];
 };
 
-export default function createDropdown({ list }: DropdownProps): Dropdown {
+/**
+ * TODO: not completed yet
+ */
+function createDropdown({ list }: DropdownProps): Dropdown {
   const container = createHTMLElement("ul", "dropdown");
   document.querySelector("body")?.appendChild(container);
 
   list.forEach((item) => {
     const li = createHTMLElement("li", "dropdown__item");
+
     li.innerText = item.label;
-    li.onclick = item.onClick;
-    li.contentEditable = "true";
+    li.addEventListener("click", item.onClick);
     container.appendChild(li);
   });
 
   return {
-    el: container,
+    element: container,
   };
 }
+
+export default createDropdown;
