@@ -29,6 +29,7 @@ function init() {
 
   api.onResize(() => {
     tabManager.activeTab?.resize();
+    console.log("resized active tab");
   });
 }
 

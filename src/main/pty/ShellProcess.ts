@@ -16,7 +16,7 @@ const defaultOptions: PtySpwanOptions = {
   useConpty: false,
 };
 
-export default class ShellProcess {
+class ShellProcess {
   static idPointer = 1;
   id = ShellProcess.idPointer++;
   shell: IPty;
@@ -52,3 +52,5 @@ export default class ShellProcess {
     this.shell.kill();
   }
 }
+
+export default ShellProcess;

@@ -9,8 +9,8 @@ import logo from "../../media/logo.png";
 
 const defaultWindowOptions: BrowserWindowConstructorOptions = {
   icon: logo,
-  width: 850,
-  height: 550,
+  width: 800,
+  height: 500,
   frame: false,
   titleBarStyle: "hidden",
   titleBarOverlay: {
@@ -23,9 +23,7 @@ const defaultWindowOptions: BrowserWindowConstructorOptions = {
   },
 };
 
-export default function createWindow(
-  options?: BrowserWindowConstructorOptions,
-) {
+function createWindow(options?: BrowserWindowConstructorOptions) {
   const window = new BrowserWindow({
     ...defaultWindowOptions,
     ...options,
@@ -53,3 +51,5 @@ export default function createWindow(
 
   return window;
 }
+
+export default createWindow;

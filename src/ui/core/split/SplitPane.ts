@@ -21,7 +21,7 @@ class SplitPane {
         : "split_pane_horizontal";
     this.container = createHTMLElement("div", "split-pane", directionClassName);
 
-    this.addSelfToParent(term)    
+    this.addSelfToParent(term);
     this.addTerm(term);
   }
 
@@ -130,7 +130,7 @@ class SplitPane {
 
     this.terms = this.terms.filter((term) => term.id !== id);
 
-    console.log("remove term id: ", id)
+    console.log("remove term id: ", id);
 
     this.shouldDisposeSelf();
   }
@@ -142,9 +142,9 @@ class SplitPane {
         parseInt(this.container.parentElement?.dataset.index as string),
       );
     } else {
-      console.log('parent(should be tab): ', this.container.parentElement)
-      console.log('term id ', term.id)
-      console.trace()
+      console.log("parent(should be tab): ", this.container.parentElement);
+      console.log("term id ", term.id);
+      console.trace();
       term.appendTo(this.container.parentElement as HTMLElement);
       term.splitPane = undefined;
     }
@@ -191,7 +191,7 @@ class SplitPane {
     const lastPane = this.childPanes[0];
 
     if (lastTerm) {
-      console.log("terms: ", this.terms)
+      console.log("terms: ", this.terms);
       this.appendLastTermToParent(lastTerm);
     }
 

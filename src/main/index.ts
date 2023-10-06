@@ -10,12 +10,16 @@ if (require("electron-squirrel-startup")) {
   electronApp.quit();
 }
 
+const app = new App();
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 electronApp.whenReady().then(() => {
-  let termokiApp = new App();
   electronApp.setAppUserModelId("com.termoki");
+
+  app.createTermokiWindow();
+  // app.createTermokiWindow();
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
@@ -23,28 +27,12 @@ electronApp.whenReady().then(() => {
     // 	TODO:
   });
 
-  termokiApp.window.on("resized", () => {
-    termokiApp.window.webContents.send("term:resize");
-  });
-
+  // TODO: move or remove (or maybe keep?)
   electronApp.on("activate", function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) {
-      termokiApp = new App();
-    }
-  });
-
-  // Quit when all windows are closed, except on macOS. There, it's common
-  // for applications and their menu bar to stay active until the user quits
-  // explicitly with Cmd + Q.
-  electronApp.on("window-all-closed", () => {
-    termokiApp.shellProcesses.forEach((p) => {
-      p.dispose();
-    });
-
-    if (process.platform !== "darwin") {
-      electronApp.quit();
+      app.createTermokiWindow();
     }
   });
 });
