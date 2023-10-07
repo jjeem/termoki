@@ -1,23 +1,21 @@
-import createHTMLElement from "../../utils/createElement";
 import SplitPane from "./SplitPane";
+import createHTMLElement from "../../utils/createElement";
 
-export type ResizeHandler = {
-  element: HTMLDivElement;
-  // TODO: likely not needed
-  dispose: () => void;
-};
+/**
+ * TODO: rework the approach so that it uses boxes' far edges to
+ * calculate sizes for each for more acccurate and smoother dragging
+ */
 
 /**
  * The resize approach:
- * determine calculate the both boxes (box stands for terminal wrapper) percent to the container (the split pane)
+ * determine the both boxes (box stands for terminal wrapper) percent to the container (the split pane)
  * then determine the distance the resizeHandler has moved in percent and subtract it from box1 percent (the left/up one)
  * for box2, it's the sum of the two boxes' initiale percent minus box1 percent
  */
-
-export const createResizeHandler = (
+const createResizeHandler = (
   type: "VERTICAL" | "HORIZONTAL",
   splitPane: SplitPane,
-): ResizeHandler => {
+): HTMLDivElement => {
   const horizontal = [
     "width",
     "clientX",
@@ -39,7 +37,6 @@ export const createResizeHandler = (
     directionValues[3],
   );
 
-  resizer.addEventListener("mousedown", onDragStart);
   // "Size" means either width or height
   let box1Size = 0;
   let box2Size = 0;
@@ -47,9 +44,11 @@ export const createResizeHandler = (
   let box2SizePercent = 0;
   let sumSizePercent = 0;
 
-  function onDragStart() {
+  const onDragStart = () => {
     window.addEventListener("mousemove", onDrag);
     window.addEventListener("mouseup", onDragEnd);
+    console.log("oiii");
+
     const container = resizer.parentElement as HTMLDivElement;
     const box1 = resizer.previousElementSibling as HTMLDivElement;
     const box2 = resizer.nextElementSibling as HTMLDivElement;
@@ -62,15 +61,15 @@ export const createResizeHandler = (
     box1SizePercent = (box1Size * 100) / conatinerWidth;
     box2SizePercent = (box2Size * 100) / conatinerWidth;
     sumSizePercent = Number((box1SizePercent + box2SizePercent).toFixed(0));
-  }
+  };
 
-  function onDragEnd() {
+  const onDragEnd = () => {
     window.removeEventListener("mousemove", onDrag);
     window.removeEventListener("mouseup", onDragEnd);
     splitPane.resizeTerms();
-  }
+  };
 
-  function onDrag(e: MouseEvent) {
+  const onDrag = (e: MouseEvent) => {
     if (e.x === 0 && e.y === 0) return;
 
     const container = resizer.parentElement as HTMLDivElement;
@@ -87,7 +86,7 @@ export const createResizeHandler = (
     );
 
     // distance in percentage to the container
-    // note: if destance > 0 : dragging towards the left and vice versa
+    // note: if destance > 0 : dragging is towards the left and vice versa
     const distance =
       ((resizerPosition - e[directionValues[1]]) * 100) / containerWidth;
 
@@ -102,10 +101,11 @@ export const createResizeHandler = (
 
     box1.style.flexBasis = `${b1}%`;
     box2.style.flexBasis = `${b2.toFixed(0)}%`;
-  }
-
-  return {
-    element: resizer,
-    dispose: () => resizer.remove(),
   };
+
+  resizer.addEventListener("mousedown", onDragStart);
+
+  return resizer;
 };
+
+export default createResizeHandler;

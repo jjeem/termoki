@@ -9,7 +9,7 @@ const config = {
     ],
     icon: "./media/logo",
     appCopyright: "Copyright (c) 2023 Jad Alkheder",
-    executableName: "termoki"
+    executableName: "termoki",
   },
   makers: [
     {
@@ -31,16 +31,16 @@ const config = {
   ],
   publishers: [
     {
-      name: '@electron-forge/publisher-github',
+      name: "@electron-forge/publisher-github",
       config: {
         repository: {
-          owner: 'jjeem',
-          name: 'termoki'
+          owner: "jjeem",
+          name: "termoki",
         },
-        prerelease: true
-      }
-    }
-  ]
+        prerelease: true,
+      },
+    },
+  ],
 };
 
 module.exports = config;

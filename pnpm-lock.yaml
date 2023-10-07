@@ -29,9 +29,6 @@ dependencies:
   xterm-addon-webgl:
     specifier: ^0.16.0
     version: 0.16.0(xterm@5.3.0)
-  xterm-webfont:
-    specifier: ^2.0.0
-    version: 2.0.0
 
 devDependencies:
   '@biomejs/biome':
@@ -2053,10 +2050,6 @@ packages:
       - supports-color
     dev: true
 
-  /fontfaceobserver@2.3.0:
-    resolution: {integrity: sha512-6FPvD/IVyT4ZlNe7Wcn5Fb/4ChigpucKYSvD6a+0iMoLn2inpo711eyIcKjmDtE5XNcgAkSH9uN/nfAeZzHEfg==}
-    dev: false
-
   /foreground-child@3.1.1:
     resolution: {integrity: sha512-TMKDUnIte6bfb5nWv7V/caI169OHgvwjb7V4WkeUvbQQdjr5rWKqHFiKWb/fcOwB+CzBT+qbWjvj+DVwRskpIg==}
     engines: {node: '>=14'}
@@ -3974,12 +3967,6 @@ packages:
       xterm: ^5.0.0
     dependencies:
       xterm: 5.3.0
-    dev: false
-
-  /xterm-webfont@2.0.0:
-    resolution: {integrity: sha512-i0MMpWvpvl56VJDF34WPieTAgAM0dPVpTQ4odGFy3nlo8aQVnu5jdAfMf02eSqG03tBg0gdlY00PjGXDA/I2Yw==}
-    dependencies:
-      fontfaceobserver: 2.3.0
     dev: false
 
   /xterm@5.3.0:
