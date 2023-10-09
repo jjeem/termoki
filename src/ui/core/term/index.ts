@@ -142,10 +142,10 @@ const handleSplit = async (term: Term, splitType: "right" | "down") => {
   let splitPane: SplitPane;
 
   if (!term.splitPane) {
-    splitPane =
-      splitType === "right"
-        ? new SplitPane("HORIZONTAL", term)
-        : new SplitPane("VERTICAL", term);
+    splitPane = new SplitPane(
+      splitType === "right" ? "HORIZONTAL" : "VERTICAL",
+      term,
+    );
   } else {
     const isParentHorizontal = term.splitPane.type === "HORIZONTAL";
 

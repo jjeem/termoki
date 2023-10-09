@@ -39,7 +39,9 @@ const registerIPCMainhandlers = (app: App) => {
 
     if (!shellPath) {
       await detectAvailableShells().then((list) => {
-        shellPath = list.find((shell) => /(git)/ig.test(shell.label))?.path || list[0].path;
+        shellPath =
+          list.find((shell) => /(git)/gi.test(shell.label))?.path ||
+          list[0].path;
       });
     }
 
