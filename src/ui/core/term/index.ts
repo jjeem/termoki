@@ -8,7 +8,7 @@ import createHTMLElement from "../../utils/createElement";
 
 const api = window.api;
 
-const config: ITerminalOptions = {
+const defaultConfig: ITerminalOptions = {
   cursorBlink: true,
   allowTransparency: true,
   allowProposedApi: true,
@@ -45,7 +45,7 @@ export class Term {
   id: number;
   shell?: string;
   tab: Tab;
-  xterm = new Terminal(config);
+  xterm = new Terminal(defaultConfig);
   private fitAddon = new FitAddon();
   private webglAddon = new WebglAddon();
   private unicode11Addon = new Unicode11Addon();
@@ -56,7 +56,6 @@ export class Term {
   constructor(
     tab: Tab,
     id: number,
-
     shell?: string, // name (bash.exe) or path
     splitPane?: SplitPane,
   ) {
@@ -71,30 +70,30 @@ export class Term {
 
     this.xterm.unicode.activeVersion = "11";
 
-    this.xterm.onResize((vals) => {
-      api.resizePty(id, { ...vals });
+    this.registerHandlers(id);
 
-      this.fitAddon.fit();
-    });
+    this.xterm.open(this.container);
+    setTimeout(() => this.resize(), 10);
+  }
 
-    // @ts-ignore TODO preload/index.d.ts
+  private registerHandlers(id: number) {
     api.onResponse(id, (_event, data) => {
       this.xterm.write(data);
     });
 
-    // @ts-ignore TODO preload/index.d.ts
     api.onPtyExit(id, (_event, _data) => {
       this.close();
       this.unmount();
     });
 
-    this.xterm.onData((data) => {
-      api?.invoke(id, data);
+    this.xterm.onResize((vals) => {
+      api.resizePty(id, { ...vals });
+      this.fitAddon.fit();
     });
-    this.xterm.open(this.container);
-    // No clue why maybe dev issue only?
-    // this.resize()
-    setTimeout(() => this.resize(), 0);
+
+    this.xterm.onData((data) => {
+      api.invoke(id, data);
+    });
   }
 
   loadWebGl() {
@@ -107,13 +106,12 @@ export class Term {
   appendTo(el: HTMLElement) {
     this.container.remove();
     el.appendChild(this.container);
-    // this.resize()
     setTimeout(() => this.resize(), 10);
   }
 
   resize() {
-    const isHeddin = this.tab.container.classList.contains("hidden");
-    if (isHeddin) return;
+    const isHidden = this.tab.container.classList.contains("hidden");
+    if (isHidden) return;
     this.fitAddon.fit();
     api.resizePty(this.id, {
       cols: this.xterm.cols,
@@ -122,19 +120,9 @@ export class Term {
   }
 
   unmount() {
-    if (this.splitPane) {
-      this.splitPane.removeTerm(this.id);
-    }
+    this.webglAddon.dispose();
     this.xterm.dispose();
     this.container.remove();
-  }
-
-  /** kills the pty and xterm but doesn't remove the object from its tab's array. use "close()" instead */
-  async dangerouslyKill() {
-    const isKilled = await api?.killPty(this.id);
-    if (isKilled) {
-      console.log("ola one dead");
-    }
   }
 
   close() {
@@ -144,34 +132,75 @@ export class Term {
     this.tab.killTerm(this.id);
   }
 
+  /** sends api call to close the pty, onExit listener will handle unmounting  */
   exit() {
     api.killPty(this.id);
   }
 }
 
-export default async function createTerm(
+const handleSplit = async (term: Term, splitType: "right" | "down") => {
+  let splitPane: SplitPane;
+
+  if (!term.splitPane) {
+    splitPane = new SplitPane(
+      splitType === "right" ? "HORIZONTAL" : "VERTICAL",
+      term,
+    );
+  } else {
+    const isParentHorizontal = term.splitPane.type === "HORIZONTAL";
+
+    if (isParentHorizontal) {
+      // Horizontal and right => same parent pane. Otherwise new vertical one
+      splitPane =
+        splitType === "right"
+          ? term.splitPane
+          : new SplitPane("VERTICAL", term);
+    } else {
+      // Vertival and down => same parent pane. Otherwise new horizontal one
+      splitPane =
+        splitType === "down"
+          ? term.splitPane
+          : new SplitPane("HORIZONTAL", term);
+    }
+  }
+
+  const newTerm = await createTerm(term.tab, term.shell, splitPane);
+  // we want the new term next to it so increase index by 1
+  // undefined will push it to the last
+  const index =
+    Number(term.container.parentElement?.dataset.index) + 1 || undefined;
+
+  splitPane.addTerm(newTerm, index);
+  newTerm.xterm.focus();
+  term.tab.terms.push(newTerm);
+
+  return newTerm;
+};
+
+async function createTerm(
   tab: Tab,
   shell?: string,
   splitPane?: SplitPane,
 ): Promise<Term> {
-  const uid = await api.initPtyProcess(shell);
+  const id = await api.initPtyProcess(shell);
+  const term = new Term(tab, id, shell, splitPane);
 
-  const term = new Term(tab, uid, shell, splitPane);
-
+  // TODO: abstract
   term.xterm.attachCustomKeyEventHandler((e) => {
     if (e.type === "keyup") {
+      // event is fired on both "keyup" and "keydown" events, so we exit in one of them
       return false;
     }
     if (e.key === "ArrowRight" && e.ctrlKey && e.shiftKey && !e.altKey) {
       console.log("split right");
       term.xterm.blur();
-      splitHandler(term, "right");
+      handleSplit(term, "right");
       return false;
     }
     if (e.key === "ArrowDown" && e.ctrlKey && e.shiftKey && !e.altKey) {
       console.log("split down");
       term.xterm.blur();
-      splitHandler(term, "down");
+      handleSplit(term, "down");
       return false;
     }
     return true;
@@ -180,43 +209,4 @@ export default async function createTerm(
   return term;
 }
 
-const splitHandler = async (term: Term, splitType: "right" | "down") => {
-  let splitPane: SplitPane;
-
-  if (term.splitPane === undefined) {
-    if (splitType === "down") {
-      splitPane = new SplitPane("VERTICAL", term);
-    } else {
-      splitPane = new SplitPane("HORIZONTAL", term);
-    }
-  } else {
-    const isParentH = term.splitPane.container.classList.contains(
-      "split_pane_horizontal",
-    );
-
-    if (isParentH) {
-      if (splitType === "right") splitPane = term.splitPane;
-      else {
-        // down and Horizontal => new split-pane Vertical
-        // term.splitPane.dangerouslyRemoveTerm(term.uid)
-        splitPane = new SplitPane("VERTICAL", term);
-      }
-    } else {
-      if (splitType === "down") splitPane = term.splitPane;
-      else {
-        // right and vertical => new parent Horizontal
-        // term.splitPane.dangerouslyRemoveTerm(term.uid)
-        splitPane = new SplitPane("HORIZONTAL", term);
-      }
-    }
-  }
-
-  const newTerm = await createTerm(term.tab, term.shell, splitPane);
-  const index = term.container.parentElement?.dataset.index || undefined;
-  if (typeof index === "string") splitPane.addTerm(newTerm, Number(index) + 1);
-  else splitPane.addTerm(newTerm);
-  newTerm.xterm.focus();
-  term.tab.terms.push(newTerm);
-
-  return newTerm;
-};
+export default createTerm;

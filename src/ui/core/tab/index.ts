@@ -1,17 +1,19 @@
-import { v4 as uuidv4 } from "uuid";
+import TabManager from "./TabManager";
 import createTerm, { Term } from "../term";
 import createHTMLElement from "../../utils/createElement";
 
-export default class Tab {
-  id = uuidv4();
-  title = "New Tab";
-  tabBtn: HTMLElement = createHTMLElement("li", "tab-button");
-  container: HTMLElement = createHTMLElement("div", "tab");
-  closeBtn: HTMLButtonElement = createHTMLElement("button", "close-tab-button");
+class Tab {
+  static idPointer = 1;
+  id = Tab.idPointer++;
+  manager: TabManager;
+  tabBtn = createHTMLElement("li", "tab-button");
+  container = createHTMLElement("div", "tab");
   terms: Term[] = [];
+  private title = "New Tab";
+  private closeBtn = createHTMLElement("button", "close-tab-button");
 
-  constructor(onClose: (t: Tab) => void, shell?: string) {
-    this.onClose = onClose;
+  constructor(tabManager: TabManager, shell?: string) {
+    this.manager = tabManager;
     const tabBtn = this.tabBtn;
     const closeBtn = this.closeBtn;
     closeBtn.innerText = "x";
@@ -21,10 +23,8 @@ export default class Tab {
       event.stopPropagation();
       this.close();
     });
-    document.querySelector(".nav-list")?.appendChild(tabBtn);
-    // tabBtn.addEventListener('click', () => this.render());
 
-    // term
+    document.querySelector(".nav-list")?.appendChild(tabBtn);
     document.querySelector(".main")?.appendChild(this.container);
 
     this.initTerm(this.container, shell).then((term) => {
@@ -33,7 +33,7 @@ export default class Tab {
     });
   }
 
-  async initTerm(parent: HTMLElement, shell?: string) {
+  private async initTerm(parent: HTMLElement, shell?: string) {
     // const term = await createTerm(this, parent, shell)
     const term = await createTerm(this, shell);
     term.appendTo(parent);
@@ -58,14 +58,15 @@ export default class Tab {
     this.terms.forEach((term) => term.resize());
   }
 
-  // e.x. used to remove the tab from tabs array
-  onClose: (t: Tab) => void;
+  private onClose() {
+    this.manager.removeTab(this.id);
+  }
 
   close() {
     this.terms.forEach((term) => term.exit());
     this.container.remove();
     this.tabBtn.remove();
-    this.onClose(this);
+    this.onClose();
   }
 
   killTerm(id: number) {
@@ -75,3 +76,5 @@ export default class Tab {
     if (this.terms.length === 0) this.close();
   }
 }
+
+export default Tab;

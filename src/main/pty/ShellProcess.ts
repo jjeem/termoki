@@ -8,7 +8,8 @@ const defaultOptions: PtySpwanOptions = {
   cols: 80,
   rows: 30,
   env: process.env,
-  cwd: process.env.HOME,
+  // HOME path not necessarily exists in windows in prodcution
+  cwd: process.env.HOME || `${process.env.HOMEDRIVE}${process.env.HOMEPATH}`,
   /* 
 		TODO: conpty causes electron to freeze when killing shell sometimes
 		so "false" for now
@@ -16,7 +17,7 @@ const defaultOptions: PtySpwanOptions = {
   useConpty: false,
 };
 
-export default class ShellProcess {
+class ShellProcess {
   static idPointer = 1;
   id = ShellProcess.idPointer++;
   shell: IPty;
@@ -52,3 +53,5 @@ export default class ShellProcess {
     this.shell.kill();
   }
 }
+
+export default ShellProcess;

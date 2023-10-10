@@ -1,69 +1,96 @@
-import { BrowserWindow } from "electron";
+import { app as electronApp } from "electron";
 import { detectAvailableShells } from "detect-shell";
-import createWindow from "./createWindow";
+import TermokiWindow from "./TermokiWindow";
 import ShellProcess from "./pty/ShellProcess";
 import { createIPCMainHandler } from "./ipc";
 
 const registerIPCMainhandlers = (app: App) => {
   createIPCMainHandler("shell:list", async () => await detectAvailableShells());
 
-  createIPCMainHandler("pty:resize", (_event, id, data) => {
-    const { cols, rows } = data;
-    app.getProcessById(id)?.shell.resize(cols, rows);
-  });
-
-  createIPCMainHandler("pty:kill", (_event, id) => {
-    app.disposeProcessWithId(id);
+  createIPCMainHandler("window:create", async () => {
+    app.createTermokiWindow();
     return true;
   });
 
-  createIPCMainHandler("term:data", (_event, id, data) => {
-    app.getProcessById(id)?.shell.write(data);
+  createIPCMainHandler("pty:kill", (_event, windowId, termId) => {
+    const window = app.getWindowById(windowId);
+    window?.disposeProcessWithId(termId);
+    return true;
   });
 
-  createIPCMainHandler("term:init", async (_event, shell) => {
+  createIPCMainHandler("term:data", (_event, windowId, termId, data) => {
+    const window = app.getWindowById(windowId);
+    window?.getProcessById(termId)?.shell.write(data);
+  });
+
+  createIPCMainHandler("pty:resize", (_event, windowId, termId, data) => {
+    const { cols, rows } = data;
+    const window = app.getWindowById(windowId);
+    window?.getProcessById(termId)?.shell.resize(cols, rows);
+  });
+
+  createIPCMainHandler("term:init", async (_event, windowId, shell) => {
+    const termokiWindow = app.getWindowById(windowId);
     let shellPath = shell;
+
+    if (!termokiWindow) {
+      throw new Error("Cannot create terminal for none existing window");
+    }
 
     if (!shellPath) {
       await detectAvailableShells().then((list) => {
-        shellPath = list[0].path;
+        shellPath =
+          list.find((shell) => /(git)/gi.test(shell.label))?.path ||
+          list[0].path;
       });
     }
 
     console.log("shell name or path: ", shellPath);
     if (!shellPath) {
-      throw new Error("No shell found, 'shellPath' value is undefined");
+      throw new Error("No shells found");
     }
 
-    const shellProcess = new ShellProcess(app.window, shellPath);
+    const shellProcess = new ShellProcess(termokiWindow.window, shellPath);
 
-    app.shellProcesses.push(shellProcess);
+    termokiWindow.shellProcesses.push(shellProcess);
 
     return shellProcess.id;
   });
 };
 
-export default class App {
-  window: BrowserWindow;
-  shellProcesses: ShellProcess[] = [];
+class App {
+  termokiWindows: TermokiWindow[] = [];
 
   constructor() {
-    this.window = createWindow();
-
     registerIPCMainhandlers(this);
   }
 
-  getProcessById = (id: number) => this.shellProcesses.find((p) => p.id === id);
+  createTermokiWindow() {
+    const window = new TermokiWindow(this);
+    this.termokiWindows.push(window);
+  }
 
-  disposeProcessWithId = (id: number) => {
-    const ptyProcess = this.getProcessById(id);
+  getWindowById(id: number) {
+    return this.termokiWindows.find((window) => window.id === id);
+  }
 
-    try {
-      ptyProcess?.dispose();
-    } catch (error) {
-      console.error(error);
+  removeWindow(id: number) {
+    this.termokiWindows = this.termokiWindows.filter(
+      (window) => window.id !== id,
+    );
+    console.log("removed TermokiWindow with id: ", id);
+    console.log("remaining windows: ", this.termokiWindows.length);
+  }
+
+  private shouldAppExit() {
+    console.log("checking if app should exit");
+    if (!this.termokiWindows.length) {
+      if (process.platform !== "darwin") {
+        electronApp.quit();
+        console.log("app exiting");
+      }
     }
-
-    this.shellProcesses = this.shellProcesses.filter((p) => p.id !== id);
-  };
+  }
 }
+
+export default App;
