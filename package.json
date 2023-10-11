@@ -15,14 +15,15 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "tsc && vite build",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "biome check ./src",
     "lint:fix": "biome check . --apply-unsafe",
     "format": "biome format . --write",
-    "postinstall": "pnpm exec electron-rebuild"
+    "postinstall": "pnpm exec electron-rebuild",
+    "prepare": "husky install"
   },
   "dependencies": {
     "detect-shell": "^1.0.2",
@@ -35,6 +36,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.1.2",
+    "@commitlint/cli": "^17.7.2",
+    "@commitlint/config-conventional": "^17.7.0",
     "@electron-forge/cli": "^6.4.2",
     "@electron-forge/maker-deb": "^6.4.2",
     "@electron-forge/maker-rpm": "^6.4.2",
@@ -49,7 +52,8 @@
     "esbuild-register": "^3.5.0",
     "typescript": "^5.2.2",
     "vite": "^4.4.11",
-    "vite-plugin-electron": "^0.14.1"
+    "vite-plugin-electron": "^0.14.1",
+    "husky": "^8.0.0"
   },
   "engines": {
     "node": ">=18.15.0"
