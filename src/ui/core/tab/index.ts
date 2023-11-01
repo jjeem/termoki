@@ -29,11 +29,11 @@ class Tab {
 
     this.initTerm(this.container, shell).then((term) => {
       term.resize();
-      term.xterm.focus();
+      term.focus();
     });
   }
 
-  private async initTerm(parent: HTMLElement, shell?: string) {
+  async initTerm(parent: HTMLElement, shell?: string) {
     // const term = await createTerm(this, parent, shell)
     const term = await createTerm(this, shell);
     term.appendTo(parent);
@@ -51,7 +51,7 @@ class Tab {
     this.container.classList.remove("hidden");
     this.tabBtn.classList.add("active-tab");
     this.resize();
-    setTimeout(() => this.terms[0]?.xterm.focus(), 0);
+    setTimeout(() => this.terms[0]?.focus(), 0);
   }
 
   resize() {

@@ -45,7 +45,7 @@ export class Term {
   id: number;
   shell?: string;
   tab: Tab;
-  xterm = new Terminal(defaultConfig);
+  private xterm = new Terminal(defaultConfig);
   private fitAddon = new FitAddon();
   private webglAddon = new WebglAddon();
   private unicode11Addon = new Unicode11Addon();
@@ -64,16 +64,9 @@ export class Term {
     this.shell = shell;
     this.splitPane = splitPane;
 
-    this.xterm.loadAddon(this.fitAddon);
-    this.xterm.loadAddon(this.unicode11Addon);
-    this.loadWebGl();
-
-    this.xterm.unicode.activeVersion = "11";
-
+    this.loadXtermAddons();
     this.registerHandlers(id);
-
-    this.xterm.open(this.container);
-    setTimeout(() => this.resize(), 10);
+    this.openXterm();
   }
 
   private registerHandlers(id: number) {
@@ -96,11 +89,30 @@ export class Term {
     });
   }
 
-  loadWebGl() {
+  private loadWebGl() {
     this.webglAddon.onContextLoss(() => {
       this.webglAddon.dispose();
     });
     this.xterm.loadAddon(this.webglAddon);
+  }
+
+  private loadXtermAddons() {
+    this.xterm.loadAddon(this.fitAddon);
+    this.xterm.loadAddon(this.unicode11Addon);
+    this.loadWebGl();
+
+    this.xterm.unicode.activeVersion = "11";
+  }
+
+  private openXterm() {
+    this.xterm.open(this.container);
+    setTimeout(() => this.resize(), 10);
+  }
+
+  attachCustomKeyEventHandler(
+    customKeyEventHandler: (event: KeyboardEvent) => boolean,
+  ) {
+    this.xterm.attachCustomKeyEventHandler(customKeyEventHandler);
   }
 
   appendTo(el: HTMLElement) {
@@ -109,9 +121,18 @@ export class Term {
     setTimeout(() => this.resize(), 10);
   }
 
+  focus() {
+    this.xterm.focus();
+  }
+
+  blur() {
+    this.xterm.blur();
+  }
+
   resize() {
     const isHidden = this.tab.container.classList.contains("hidden");
     if (isHidden) return;
+
     this.fitAddon.fit();
     api.resizePty(this.id, {
       cols: this.xterm.cols,
@@ -125,6 +146,7 @@ export class Term {
     this.container.remove();
   }
 
+  /** tells the parents (tab/splitPane) to remove itself. will call exit */
   close() {
     if (this.splitPane) {
       this.splitPane.removeTerm(this.id);
@@ -171,7 +193,7 @@ const handleSplit = async (term: Term, splitType: "right" | "down") => {
     Number(term.container.parentElement?.dataset.index) + 1 || undefined;
 
   splitPane.addTerm(newTerm, index);
-  newTerm.xterm.focus();
+  newTerm.focus();
   term.tab.terms.push(newTerm);
 
   return newTerm;
@@ -186,20 +208,21 @@ async function createTerm(
   const term = new Term(tab, id, shell, splitPane);
 
   // TODO: abstract
-  term.xterm.attachCustomKeyEventHandler((e) => {
+  term.attachCustomKeyEventHandler((e) => {
+    console.log("------------> New Evenet <-------------");
     if (e.type === "keyup") {
       // event is fired on both "keyup" and "keydown" events, so we exit in one of them
       return false;
     }
     if (e.key === "ArrowRight" && e.ctrlKey && e.shiftKey && !e.altKey) {
       console.log("split right");
-      term.xterm.blur();
+      term.blur();
       handleSplit(term, "right");
       return false;
     }
     if (e.key === "ArrowDown" && e.ctrlKey && e.shiftKey && !e.altKey) {
       console.log("split down");
-      term.xterm.blur();
+      term.blur();
       handleSplit(term, "down");
       return false;
     }

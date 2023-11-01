@@ -11,5 +11,8 @@ node_modules/
 .vite/
 dist/
 
+# vitest
+coverage/
+
 # Electron-Forge
 out/
