@@ -35,6 +35,15 @@ describe("Term", async () => {
   const Tab = (await import("../../tab")).default;
   const Term = (await import("../index")).Term;
 
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  vi.spyOn(Term.prototype as any, "loadXtermAddons").mockImplementation(
+    vi.fn(() => null),
+  );
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  vi.spyOn(Term.prototype as any, "registerHandlers").mockImplementation(
+    vi.fn(() => null),
+  );
+
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -83,14 +92,6 @@ describe("createTerm() func", async () => {
   const { default: createTerm, Term } = await import("../index");
 
   vi.spyOn(Term.prototype, "attachCustomKeyEventHandler");
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  vi.spyOn(Term.prototype as any, "loadXtermAddons").mockImplementation(
-    vi.fn(() => null),
-  );
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  vi.spyOn(Term.prototype as any, "registerHandlers").mockImplementation(
-    vi.fn(() => null),
-  );
 
   beforeEach(() => {
     vi.clearAllMocks();
