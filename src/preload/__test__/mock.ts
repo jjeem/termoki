@@ -5,6 +5,7 @@ let idIndex = 1;
 
 export const apiMock: Window["api"] = {
   getAvailableShells: vi.fn(async () => [{ label: "sh", path: "sh.exe" }]),
+  platform: vi.fn(async () => "win32"),
   initPtyProcess: vi.fn(async () => idIndex++),
   invoke: vi.fn((id: number, data: string | Uint8Array) =>
     console.log("api.invoke: ", data),
