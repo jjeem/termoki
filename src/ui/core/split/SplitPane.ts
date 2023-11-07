@@ -4,7 +4,7 @@ import createHTMLElement from "../../utils/createElement";
 
 class SplitPane {
   static idPointer = 1;
-  id: number = SplitPane.idPointer++;
+  id = SplitPane.idPointer++;
   container: HTMLDivElement;
   readonly type: "VERTICAL" | "HORIZONTAL";
   private parentPane?: SplitPane;
@@ -25,7 +25,7 @@ class SplitPane {
     this.addTerm(term);
   }
 
-  addSelfToParent(term: Term) {
+  private addSelfToParent(term: Term) {
     if (term.splitPane) {
       term.splitPane.addChildPane(
         this,
@@ -78,9 +78,9 @@ class SplitPane {
     }
   }
 
-  private removeChildWrapper(index: number) {
+  private removeChildWrapper(index: string) {
     this.childWrappers = this.childWrappers.filter((wrapper) => {
-      if (Number(wrapper.dataset.index) === index) {
+      if (wrapper.dataset.index === index) {
         wrapper.remove();
         return false;
       }
@@ -103,7 +103,7 @@ class SplitPane {
     const wrapper = pane?.container.parentElement;
 
     if (wrapper?.dataset.index) {
-      this.removeChildWrapper(Number(wrapper?.dataset.index));
+      this.removeChildWrapper(wrapper?.dataset.index);
     }
 
     this.childPanes = this.childPanes.filter((pane) => pane.id !== id);
@@ -125,12 +125,10 @@ class SplitPane {
     const wrapper = term?.container.parentElement;
 
     if (wrapper?.dataset.index) {
-      this.removeChildWrapper(Number(wrapper?.dataset.index));
+      this.removeChildWrapper(wrapper?.dataset.index);
     }
 
     this.terms = this.terms.filter((term) => term.id !== id);
-
-    console.log("remove term id: ", id);
 
     this.shouldDisposeSelf();
   }
@@ -142,9 +140,6 @@ class SplitPane {
         parseInt(this.container.parentElement?.dataset.index as string),
       );
     } else {
-      console.log("parent(should be tab): ", this.container.parentElement);
-      console.log("term id ", term.id);
-      console.trace();
       term.appendTo(this.container.parentElement as HTMLElement);
       term.splitPane = undefined;
     }
@@ -186,12 +181,12 @@ class SplitPane {
     }
   }
 
-  dispose() {
+  private dispose() {
     const lastTerm = this.terms[0];
     const lastPane = this.childPanes[0];
 
     if (lastTerm) {
-      console.log("terms: ", this.terms);
+      // console.log("terms: ", this.terms);
       this.appendLastTermToParent(lastTerm);
     }
 

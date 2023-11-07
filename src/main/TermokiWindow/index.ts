@@ -1,7 +1,7 @@
-import { BrowserWindow, app as electronApp } from "electron";
-import createWindow from "./createWindow";
-import ShellProcess from "./pty/ShellProcess";
-import App from "./App";
+import { BrowserWindow } from "electron";
+import createWindow from "../createWindow";
+import ShellProcess from "../pty/ShellProcess";
+import App from "../App";
 class TermokiWindow {
   static idPointer = 1;
   id = TermokiWindow.idPointer++;

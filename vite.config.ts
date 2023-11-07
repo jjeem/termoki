@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import electron from "vite-plugin-electron";
 import { notBundle } from "vite-plugin-electron/plugin";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
@@ -37,6 +38,9 @@ const config: UserConfig = {
       },
     ]),
   ],
+  test: {
+    environment: "jsdom",
+  },
 };
 
 export default config;
