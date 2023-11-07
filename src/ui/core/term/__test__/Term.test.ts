@@ -48,7 +48,7 @@ describe("Term", async () => {
     vi.clearAllMocks();
   });
 
-  it("should load addons and register event handlers", async () => {
+  it("should load addons and register event handlers", () => {
     const manager = new TabManager();
     const tab = new Tab(manager);
     const term = new Term(tab, 1);
@@ -59,7 +59,7 @@ describe("Term", async () => {
     expect(term.registerHandlers).toHaveBeenCalledOnce();
   });
 
-  it("should resize both xterm and pty", async () => {
+  it("should resize both xterm and pty", () => {
     const manager = new TabManager();
     const tab = new Tab(manager);
     const term = new Term(tab, 1);
@@ -70,7 +70,7 @@ describe("Term", async () => {
     expect(term.fitAddon.fit).toHaveBeenCalledOnce();
   });
 
-  it("should resize after inserted into the DOM", () => {
+  it("resizes after inserted into the DOM", () => {
     const manager = new TabManager();
     const tab = new Tab(manager);
     const term = new Term(tab, 1);
@@ -97,7 +97,7 @@ describe("createTerm() func", async () => {
     vi.clearAllMocks();
   });
 
-  it("should attach splitting Event Handlers", async () => {
+  it("attaches splitting Event Handlers", async () => {
     const manager = new TabManager();
     const tab = new Tab(manager);
     const term = await createTerm(tab);

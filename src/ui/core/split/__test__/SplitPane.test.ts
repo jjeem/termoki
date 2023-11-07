@@ -34,7 +34,7 @@ describe("SplitPane", async () => {
     expect(spV.container.classList.item(1)).eq("split_pane_vertical");
   });
 
-  it("should wrap child terminal with wrapper", () => {
+  it("wraps child terminal with wrapper", () => {
     const term = new createTerm();
     const sp = new SplitPane("HORIZONTAL", term);
 
@@ -45,7 +45,7 @@ describe("SplitPane", async () => {
     expect(term.appendTo).toHaveBeenCalledWith(sp.childWrappers[0]);
   });
 
-  it("add new term in the correct position", () => {
+  it("adds the new term in the correct position", () => {
     const term1 = createTerm();
     const term2 = createTerm();
     const term3 = createTerm();
@@ -72,7 +72,7 @@ describe("SplitPane", async () => {
     expect(sp.container.children.length).toBe(5);
   });
 
-  it("should dispose when there's one child left", () => {
+  it("dispose itself when there's one child left", () => {
     const term1 = createTerm();
     const term2 = createTerm();
     const sp = new SplitPane("HORIZONTAL", term1);

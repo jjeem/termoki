@@ -5,14 +5,14 @@ import { apiMock } from "../../../../preload/__test__/mock";
 vi.mock("../index.ts", () => TabModuleMock);
 vi.stubGlobal("api", apiMock);
 
-describe("TabManager class", async () => {
+describe("TabManager", async () => {
   const TabManager = (await import("../TabManager")).default;
 
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("Create TabManager instance", async () => {
+  it("Creates Tab", () => {
     const tabManager = new TabManager();
 
     vi.spyOn(tabManager, "createTab");
@@ -26,7 +26,7 @@ describe("TabManager class", async () => {
     expect(tabManager.tabs).toHaveLength(2);
   });
 
-  it("closing last tab should create new one", async () => {
+  it("creates new tab after closing last one", () => {
     const tabManager = new TabManager();
 
     vi.spyOn(tabManager, "createTab");
@@ -43,7 +43,7 @@ describe("TabManager class", async () => {
     expect(tabManager.tabs).toHaveLength(1);
   });
 
-  it("close active tab should activated the one on its left", () => {
+  it("closing active tab should activate the one on its left", () => {
     const tabManager = new TabManager();
 
     vi.spyOn(tabManager, "createTab");

@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as TermModuleMock from "../../term/__test__/mock";
 import type Tab from "../index";
 import { apiMock } from "../../../../preload/__test__/mock";
@@ -7,13 +7,17 @@ vi.stubGlobal("api", apiMock);
 
 vi.mock("../../term/index.ts", () => TermModuleMock);
 
-describe("Tab class", async () => {
+describe("Tab", async () => {
   const Tab = (await import("../index")).default;
   const TabManager = (
     await vi.importMock<typeof import("../TabManager")>("../TabManager")
   ).default;
 
-  it("Create new Tab instance and close its only terminal", async () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("Creates new Tab instance and close its only terminal", async () => {
     const tabManager = new TabManager();
 
     // method initTerm is asynchronous and its called inside the constructor
@@ -36,7 +40,7 @@ describe("Tab class", async () => {
     expect(tab.close).toHaveBeenCalledOnce();
   });
 
-  it("calling resize() method resize all terminals", async () => {
+  it("resizes all terminals when resize() called", async () => {
     const tabManager = new TabManager();
     const tab = await new Promise<Tab>((res) => res(new Tab(tabManager)));
 
