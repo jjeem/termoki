@@ -7,7 +7,8 @@ import { join } from "path";
 // @ts-ignore
 import logo from "../../media/logo.png";
 
-const HIDE_WINDOW_FRAME = process.platform === "darwin" || process.platform === "win32";
+const HIDE_WINDOW_FRAME =
+  process.platform === "darwin" || process.platform === "win32";
 
 const defaultWindowOptions: BrowserWindowConstructorOptions = {
   icon: logo,

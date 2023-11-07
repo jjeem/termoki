@@ -7,6 +7,8 @@ import { createIPCMainHandler } from "./ipc";
 const registerIPCMainhandlers = (app: App) => {
   createIPCMainHandler("shell:list", async () => await detectAvailableShells());
 
+  createIPCMainHandler("os:platform", () => process.platform);
+
   createIPCMainHandler("window:create", async () => {
     app.createTermokiWindow();
     return true;

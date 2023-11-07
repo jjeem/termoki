@@ -6,6 +6,7 @@ declare global {
       invoke: (id: number, data: string | Uint8Array) => void;
       initPtyProcess: (shell?: string) => Promise<number>;
       getAvailableShells: () => Promise<Shell[]>;
+      platform: () => Promise<string>;
       resizePty: (id: number, data: { cols: number; rows: number }) => void;
       killPty: (id: number) => Promise<boolean>;
       onResize: (callback: (event: Electron.IpcRendererEvent) => void) => void;

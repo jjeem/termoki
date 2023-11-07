@@ -34,7 +34,8 @@ const prepareShellSelect = async (
   });
 };
 
-const createUi = (createTab: (shell?: string) => Tab) => {
+const createUi = async (createTab: (shell?: string) => Tab) => {
+  const titleBar = createHTMLElement("div", "title-bar");
   const nav = createHTMLElement("nav", "nav");
   const logoElement = createHTMLElement("img", "title-bar-logo");
   const tabsList = createHTMLElement("ul", "nav-list");
@@ -45,8 +46,12 @@ const createUi = (createTab: (shell?: string) => Tab) => {
   newTabBtn.innerText = "+";
   logoElement.src = logo;
 
-  nav.append(logoElement, tabsList, newTabBtn, shellSelectELement);
-  document.querySelector("body")?.append(nav, main);
+  titleBar.style.flexDirection =
+    (await api.platform()) === "darwin" ? "row-reverse" : "row";
+
+  nav.append(tabsList, newTabBtn, shellSelectELement);
+  titleBar.append(logoElement);
+  document.querySelector("body")?.append(titleBar, nav, main);
 
   newTabBtn.addEventListener("click", () => {
     createTab();

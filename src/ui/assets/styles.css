@@ -72,16 +72,11 @@ body {
   border: 0;
 }
 
-.nav {
+.title-bar {
   display: flex;
-  align-items: end;
-  position: fixed;
-  z-index: 10;
-  top: 0;
-  left: 0;
-  width: calc(100% - 136px);
-  min-height: 40px;
-  background-color: var(--tab-bg);
+  align-items: center;
+  height: 35px;
+  padding: 2px 12px;
   -webkit-app-region: drag;
 }
 
@@ -89,8 +84,22 @@ body {
   aspect-ratio: 1;
   width: 22px;
   height: 22px;
-  margin: 8px 12px;
+  /* margin: 8px 12px; */
   -webkit-app-region: no-drag;
+}
+
+.nav {
+  display: flex;
+  align-items: end;
+  /* position: fixed; */
+  /* z-index: 10; */
+  top: 0;
+  left: 0;
+  /* width: calc(100% - 136px); */
+  width: 100%;
+  min-height: 30px;
+  background-color: var(--tab-bg);
+  /* -webkit-app-region: drag; */
 }
 
 .nav-list {
@@ -123,7 +132,7 @@ body {
 .new-tab-button {
   width: 24px;
   height: 24px;
-  margin: 6px;
+  margin: 3px;
   color: white;
   cursor: pointer;
   font-size: 16px;
@@ -148,8 +157,9 @@ body {
 
 .close-tab-button {
   width: 24px;
-  height: 24px;
-  margin: 4px 0 4px 12px;
+  /* height: 20px; */
+  height: 100%;
+  margin: 2px 0 2px 12px;
   color: white;
   cursor: pointer;
   font-size: 16px;
@@ -167,7 +177,7 @@ body {
   height: 16px;
   background-color: var(--tab-bg);
   border: none;
-  margin: 4px 4px 10px 4px;
+  margin: 4px 4px 8px 4px;
   cursor: pointer;
   line-height: inherit;
   -webkit-app-region: no-drag;
@@ -177,8 +187,8 @@ body {
   width: 100%;
   height: 100%;
   display: flex;
-  padding: 0 4px;
-  margin-top: 40px;
+  padding: 8px;
+  /* margin-top: 40px; */
   overflow: hidden;
   background-color: var(--main-bg);
 }

@@ -209,19 +209,16 @@ async function createTerm(
 
   // TODO: abstract
   term.attachCustomKeyEventHandler((e) => {
-    console.log("------------> New Evenet <-------------");
     if (e.type === "keyup") {
       // event is fired on both "keyup" and "keydown" events, so we exit in one of them
       return false;
     }
     if (e.key === "ArrowRight" && e.ctrlKey && e.shiftKey && !e.altKey) {
-      console.log("split right");
       term.blur();
       handleSplit(term, "right");
       return false;
     }
     if (e.key === "ArrowDown" && e.ctrlKey && e.shiftKey && !e.altKey) {
-      console.log("split down");
       term.blur();
       handleSplit(term, "down");
       return false;

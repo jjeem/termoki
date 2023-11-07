@@ -9,6 +9,7 @@ const registerAPI = (windowId: number) => {
   // Custom APIs for renderer
   const api: typeof window.api = {
     getAvailableShells: () => ipcRenderer.invoke("shell:list"),
+    platform: () => ipcRenderer.invoke("os:platform"),
     invoke: (termId, data) =>
       ipcRenderer.invoke("term:data", windowId, termId, data),
     initPtyProcess: (shell) => ipcRenderer.invoke("term:init", windowId, shell),

@@ -35,6 +35,7 @@ export type RendererToMainIpcChannels = {
     data: ResizeData,
   ) => void;
   "shell:list": () => Promise<Shell[]>;
+  "os:platform": () => string;
 };
 
 type MainToRendererIpcChannels<id extends number> =
