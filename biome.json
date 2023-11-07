@@ -3,6 +3,9 @@
   "organizeImports": {
     "enabled": false
   },
+  "files": {
+    "ignore": ["coverage/**", "dist/**"]
+  },
   "linter": {
     "enabled": true,
     "rules": {
