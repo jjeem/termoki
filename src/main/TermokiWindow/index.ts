@@ -2,6 +2,7 @@ import { BrowserWindow } from "electron";
 import createWindow from "../createWindow";
 import ShellProcess from "../pty/ShellProcess";
 import App from "../App";
+
 class TermokiWindow {
   static idPointer = 1;
   id = TermokiWindow.idPointer++;
@@ -16,10 +17,16 @@ class TermokiWindow {
     this.registerHandlers();
   }
 
+  private resize() {
+    this.window.webContents.send("term:resize");
+  }
+
   private registerHandlers() {
-    this.window.on("resized", () => {
-      this.window.webContents.send("term:resize");
-    });
+    this.window.on("resized", this.resize.bind(this));
+
+    this.window.on("maximize", this.resize.bind(this));
+
+    this.window.on("unmaximize", this.resize.bind(this));
 
     this.window.on("close", () => {
       this.dispose();

@@ -7,16 +7,18 @@ import { join } from "path";
 // @ts-ignore
 import logo from "../../media/logo.png";
 
+const HIDE_WINDOW_FRAME = process.platform === "darwin" || process.platform === "win32";
+
 const defaultWindowOptions: BrowserWindowConstructorOptions = {
   icon: logo,
   width: 800,
   height: 500,
-  frame: false,
-  titleBarStyle: "hidden",
+  frame: !HIDE_WINDOW_FRAME,
+  titleBarStyle: HIDE_WINDOW_FRAME ? "hidden" : "default",
   titleBarOverlay: {
     color: "#011627",
     symbolColor: "#e8e5e5",
-    height: 40,
+    height: 30,
   },
   webPreferences: {
     preload: join(__dirname, "./preload.js"),
