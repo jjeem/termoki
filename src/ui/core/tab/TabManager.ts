@@ -46,9 +46,6 @@ const createUi = async (createTab: (shell?: string) => Tab) => {
   newTabBtn.innerText = "+";
   logoElement.src = logo;
 
-  titleBar.style.flexDirection =
-    (await api.platform()) === "darwin" ? "row-reverse" : "row";
-
   nav.append(tabsList, newTabBtn, shellSelectELement);
   titleBar.append(logoElement);
   document.querySelector("body")?.append(titleBar, nav, main);
@@ -56,7 +53,12 @@ const createUi = async (createTab: (shell?: string) => Tab) => {
   newTabBtn.addEventListener("click", () => {
     createTab();
   });
+
+  // call async stuff here after embedding the elements
   prepareShellSelect(createTab, shellSelectELement);
+  // on macOS, move logo to the right side
+  titleBar.style.flexDirection =
+    (await api?.platform()) === "darwin" ? "row-reverse" : "row";
 };
 
 const renderUi = (createTab: (shell?: string) => Tab) => {
