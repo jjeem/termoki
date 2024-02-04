@@ -8,9 +8,6 @@ dependencies:
   '@jjeem/detect-shell':
     specifier: ^1.0.2
     version: 1.0.2
-  detect-shell:
-    specifier: ^1.0.2
-    version: 1.0.2
   electron-squirrel-startup:
     specifier: ^1.0.0
     version: 1.0.0
@@ -2312,10 +2309,6 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
-
-  /detect-shell@1.0.2:
-    resolution: {integrity: sha512-lMKgudqO/CE0TYYSUWYCi27aMYIFpDmhG3rFZPC3byxkQFTyJp9uqee/aNXeqNjMvpVoB1iF/Fu8bJhVqn6Mxg==}
-    dev: false
 
   /diff-sequences@29.6.3:
     resolution: {integrity: sha512-EjePK1srD3P08o2j4f0ExnylqRs5B9tJjcp9t1krH2qRi8CCdsYfwe9JgSLurFBWwq4uOlipzfk5fHNvwFKr8Q==}
