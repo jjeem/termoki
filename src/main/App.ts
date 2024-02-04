@@ -70,8 +70,6 @@ class App {
   createTermokiWindow() {
     const window = new TermokiWindow(this);
     this.termokiWindows.push(window);
-
-    this.termokiWindows.push(new TermokiWindow(this));
   }
 
   getWindowById(id: number) {
