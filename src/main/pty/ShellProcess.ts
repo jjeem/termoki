@@ -4,7 +4,7 @@ import { IPty, IPtyForkOptions, IWindowsPtyForkOptions, spawn } from "node-pty";
 type PtySpwanOptions = IPtyForkOptions | IWindowsPtyForkOptions;
 
 const defaultOptions: PtySpwanOptions = {
-  name: "xterm-color",
+  name: "xterm-256color",
   cols: 80,
   rows: 30,
   env: process.env,

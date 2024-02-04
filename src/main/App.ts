@@ -1,5 +1,5 @@
 import { app as electronApp } from "electron";
-import { detectAvailableShells } from "detect-shell";
+import { detectAvailableShells } from "@jjeem/detect-shell";
 import TermokiWindow from "./TermokiWindow";
 import ShellProcess from "./pty/ShellProcess";
 import { createIPCMainHandler } from "./ipc";
