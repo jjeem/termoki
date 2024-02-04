@@ -1,5 +1,11 @@
 import { BrowserWindow } from "electron";
-import { IPty, IPtyForkOptions, IWindowsPtyForkOptions, spawn } from "node-pty";
+import {
+  spawn,
+  type IPty,
+  type IPtyForkOptions,
+  type IWindowsPtyForkOptions,
+} from "node-pty";
+import { invokeIPCRendererHandler } from "../../shared/ipc";
 
 type PtySpwanOptions = IPtyForkOptions | IWindowsPtyForkOptions;
 
@@ -8,7 +14,7 @@ const defaultOptions: PtySpwanOptions = {
   cols: 80,
   rows: 30,
   env: process.env,
-  // HOME path not necessarily exists in windows in prodcution
+  // HOME path not necessarily exists on windows in prodcution
   cwd: process.env.HOME || `${process.env.HOMEDRIVE}${process.env.HOMEPATH}`,
   /* 
 		TODO: conpty causes electron to freeze when killing shell sometimes
@@ -38,11 +44,11 @@ class ShellProcess {
 
   private subscribeToEvents() {
     const { dispose: dataListenerDispose } = this.shell.onData((data) => {
-      this.window.webContents.send(`term:response:${this.id}`, data);
+      invokeIPCRendererHandler(`term:response:${this.id}`, this.window, data);
     });
 
     const { dispose: exitListenerDispose } = this.shell.onExit((e) => {
-      this.window.webContents.send(`term:exit:${this.id}`, e);
+      invokeIPCRendererHandler(`term:exit:${this.id}`, this.window, e);
     });
 
     this.disposers.push(dataListenerDispose, exitListenerDispose);

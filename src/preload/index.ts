@@ -1,25 +1,37 @@
 import { contextBridge, ipcRenderer } from "electron";
+import { inovkeIPCMainHandler, createIPCRendererHandler } from "../shared/ipc";
 
 ipcRenderer.once("id", (_event, id: number) => {
   registerAPI(id);
   console.log("registered API with windowID: ", id);
 });
 
-const registerAPI = (windowId: number) => {
+export const registerAPI = (windowId: number) => {
   // Custom APIs for renderer
-  const api: typeof window.api = {
-    getAvailableShells: () => ipcRenderer.invoke("shell:list"),
-    platform: () => ipcRenderer.invoke("os:platform"),
-    invoke: (termId, data) =>
-      ipcRenderer.invoke("term:data", windowId, termId, data),
-    initPtyProcess: (shell) => ipcRenderer.invoke("term:init", windowId, shell),
-    resizePty: (termId, data) =>
-      ipcRenderer.invoke("pty:resize", windowId, termId, data),
-    killPty: (termId) => ipcRenderer.invoke("pty:kill", windowId, termId),
-    onResize: (callback) => ipcRenderer.on("term:resize", callback),
-    onResponse: (id, callback) =>
-      ipcRenderer.on(`term:response:${id}`, callback),
-    onPtyExit: (id, callback) => ipcRenderer.on(`term:exit:${id}`, callback),
+  const api = {
+    getAvailableShells: inovkeIPCMainHandler("shell:list"),
+    platform: inovkeIPCMainHandler("os:platform"),
+    invoke: inovkeIPCMainHandler("term:data"),
+    initPtyProcess: inovkeIPCMainHandler("term:init"),
+    resizePty: inovkeIPCMainHandler("pty:resize"),
+    killPty: inovkeIPCMainHandler("pty:kill"),
+
+    onResize: createIPCRendererHandler("term:resize"),
+    onResponse: (
+      id: number,
+      callback: Parameters<
+        ReturnType<
+          typeof createIPCRendererHandler<`term:response:${typeof id}`>
+        >
+      >[0],
+    ) => createIPCRendererHandler(`term:response:${id}`)(callback),
+
+    onPtyExit: (
+      id: number,
+      callback: Parameters<
+        ReturnType<typeof createIPCRendererHandler<`term:exit:${typeof id}`>>
+      >[0],
+    ) => createIPCRendererHandler(`term:exit:${id}`)(callback),
   };
 
   // Use `contextBridge` APIs to expose Electron APIs to
@@ -28,10 +40,14 @@ const registerAPI = (windowId: number) => {
   if (process.contextIsolated) {
     try {
       contextBridge.exposeInMainWorld("api", api);
+      contextBridge.exposeInMainWorld("id", windowId);
     } catch (error) {
       console.error(error);
     }
   } else {
     window.api = api;
+    window.id = windowId;
   }
+
+  return api;
 };

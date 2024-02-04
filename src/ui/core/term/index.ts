@@ -80,12 +80,12 @@ export class Term {
     });
 
     this.xterm.onResize((vals) => {
-      api.resizePty(id, { ...vals });
+      api.resizePty(window.id, id, { ...vals });
       this.fitAddon.fit();
     });
 
     this.xterm.onData((data) => {
-      api.invoke(id, data);
+      api.invoke(window.id, id, data);
     });
   }
 
@@ -134,7 +134,7 @@ export class Term {
     if (isHidden) return;
 
     this.fitAddon.fit();
-    api.resizePty(this.id, {
+    api.resizePty(window.id, this.id, {
       cols: this.xterm.cols,
       rows: this.xterm.rows,
     });
@@ -156,7 +156,7 @@ export class Term {
 
   /** sends api call to close the pty, onExit listener will handle unmounting  */
   exit() {
-    api.killPty(this.id);
+    api.killPty(window.id, this.id);
   }
 }
 
@@ -204,7 +204,7 @@ async function createTerm(
   shell?: string,
   splitPane?: SplitPane,
 ): Promise<Term> {
-  const id = await api.initPtyProcess(shell);
+  const id = await api.initPtyProcess(window.id, shell);
   const term = new Term(tab, id, shell, splitPane);
 
   // TODO: abstract

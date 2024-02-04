@@ -2,7 +2,7 @@ import { app as electronApp } from "electron";
 import { detectAvailableShells } from "@jjeem/detect-shell";
 import TermokiWindow from "./TermokiWindow";
 import ShellProcess from "./pty/ShellProcess";
-import { createIPCMainHandler } from "./ipc";
+import { createIPCMainHandler } from "../shared/ipc";
 
 const registerIPCMainhandlers = (app: App) => {
   createIPCMainHandler("shell:list", async () => await detectAvailableShells());
@@ -70,6 +70,8 @@ class App {
   createTermokiWindow() {
     const window = new TermokiWindow(this);
     this.termokiWindows.push(window);
+
+    this.termokiWindows.push(new TermokiWindow(this));
   }
 
   getWindowById(id: number) {
