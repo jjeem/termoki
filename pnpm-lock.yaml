@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  detect-shell:
+  '@jjeem/detect-shell':
     specifier: ^1.0.2
     version: 1.0.2
   electron-squirrel-startup:
@@ -1155,6 +1155,10 @@ packages:
     dependencies:
       '@sinclair/typebox': 0.27.8
     dev: true
+
+  /@jjeem/detect-shell@1.0.2:
+    resolution: {integrity: sha512-sh/RZdsteUNFUE05cNKci47spcjij78UPqRmVojMcjkOWCidIRJypd223Gai0oKRa9NiXrDZT7bbtyQ4NnsWmQ==}
+    dev: false
 
   /@jridgewell/gen-mapping@0.3.3:
     resolution: {integrity: sha512-HLhSWOLRi875zjjMG/r+Nv0oCW8umGb0BgEhyX3dDX3egwZtB8PqLnjz3yedt8R5StBrzcg4aBpnh8UA9D1BoQ==}
@@ -2306,10 +2310,6 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
-
-  /detect-shell@1.0.2:
-    resolution: {integrity: sha512-lMKgudqO/CE0TYYSUWYCi27aMYIFpDmhG3rFZPC3byxkQFTyJp9uqee/aNXeqNjMvpVoB1iF/Fu8bJhVqn6Mxg==}
-    dev: false
 
   /diff-sequences@29.6.3:
     resolution: {integrity: sha512-EjePK1srD3P08o2j4f0ExnylqRs5B9tJjcp9t1krH2qRi8CCdsYfwe9JgSLurFBWwq4uOlipzfk5fHNvwFKr8Q==}
