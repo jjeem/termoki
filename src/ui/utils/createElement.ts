@@ -1,4 +1,4 @@
-function createHTMLElement<K extends keyof HTMLElementTagNameMap,>(
+function createHTMLElement<K extends keyof HTMLElementTagNameMap>(
   tagName: K,
   ...classNames: string[]
 ) {
