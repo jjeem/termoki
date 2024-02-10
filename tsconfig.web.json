@@ -4,5 +4,9 @@
     "composite": true,
     "types": ["./src/preload/index.d.ts"]
   },
-  "include": ["./src/preload/**/*.ts", "./src/ui/**/*.ts"]
+  "include": [
+    "./src/preload/**/*.ts",
+    "./src/ui/**/*.ts",
+    "./src/shared/**/*.ts"
+  ]
 }

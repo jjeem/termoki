@@ -2,6 +2,7 @@ import { BrowserWindow } from "electron";
 import createWindow from "../createWindow";
 import ShellProcess from "../pty/ShellProcess";
 import App from "../App";
+import { invokeIPCRendererHandler } from "../../shared/ipc";
 
 class TermokiWindow {
   static idPointer = 1;
@@ -18,7 +19,7 @@ class TermokiWindow {
   }
 
   private resize() {
-    this.window.webContents.send("term:resize");
+    invokeIPCRendererHandler("term:resize", this.window);
   }
 
   private registerHandlers() {
