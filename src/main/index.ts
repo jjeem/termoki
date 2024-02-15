@@ -19,15 +19,10 @@ electronApp.whenReady().then(() => {
   electronApp.setAppUserModelId("com.termoki");
 
   app.createTermokiWindow();
-  // app.createTermokiWindow();
 
-  // Default open or close DevTools by F12 in development
-  // and ignore CommandOrControl + R in production.
-  electronApp.on("browser-window-created", (_, window) => {
-    // 	TODO:
-  });
+  // TODO: ignore CommandOrControl + R in production.
+  // electronApp.on("browser-window-created", (_, window) => {});
 
-  // TODO: move or remove (or maybe keep?)
   electronApp.on("activate", () => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.

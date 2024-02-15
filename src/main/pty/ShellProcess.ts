@@ -5,7 +5,7 @@ import {
   type IPtyForkOptions,
   type IWindowsPtyForkOptions,
 } from "node-pty";
-import { invokeIPCRendererHandler } from "../../shared/ipc";
+import { invokeIPCRendererHandler } from "../../lib/ipc";
 
 type PtySpwanOptions = IPtyForkOptions | IWindowsPtyForkOptions;
 

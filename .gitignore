@@ -16,3 +16,6 @@ coverage/
 
 # Electron-Forge
 out/
+
+# dev/test related files
+_ignored/

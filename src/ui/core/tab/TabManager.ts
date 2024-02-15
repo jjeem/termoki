@@ -54,6 +54,11 @@ const createUi = async (createTab: (shell?: string) => Tab) => {
     createTab();
   });
 
+  // TODO: move opening settings file to app menu when implemented
+  logoElement.addEventListener("click", () => {
+    console.log(api.openSettings());
+  });
+
   // call async stuff here after embedding the elements
   prepareShellSelect(createTab, shellSelectELement);
   // on macOS, move logo to the right side

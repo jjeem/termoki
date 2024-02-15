@@ -1,0 +1,37 @@
+{
+  "shell": "",
+  "shell.cwd": "",
+  "terminal.webgl": true,
+  "terminal.config": {
+    "cursorBlink": true,
+    "allowTransparency": true,
+    "allowProposedApi": true,
+    "fontFamily": "Consolas, Menlo, Courier New, monospace",
+    "fontSize": 14,
+    "letterSpacing": 0,
+    "theme": {
+      "background": "#2E3440",
+      "foreground": "#F8F8F0",
+      "cursor": "#0059ae",
+      "cursorAccent": "#ffffff99",
+      "selectionBackground": "#1c91f8",
+      "selectionForeground": "#ffffff",
+      "black": "#2E3440",
+      "red": "#c45c66",
+      "green": "#c3ce5f",
+      "yellow": "#FD971F",
+      "blue": "#49a9a4",
+      "magenta": "#66D9EF",
+      "cyan": "#38CCD1",
+      "white": "#ffffff",
+      "brightBlack": "#65737e",
+      "brightRed": "#c45c66",
+      "brightGreen": "#c3ce5f",
+      "brightYellow": "#FD971F",
+      "brightBlue": "#49a9a4",
+      "brightMagenta": "#66D9EF",
+      "brightCyan": "#38CCD1",
+      "brightWhite": "#F8F8F0"
+    }
+  }
+}

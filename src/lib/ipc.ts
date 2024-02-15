@@ -5,6 +5,7 @@ import {
   type IpcMainInvokeEvent,
   type IpcRendererEvent,
 } from "electron";
+import { SettingsChannel } from "../main/Store/settings";
 
 type Shell = {
   label: string;
@@ -24,12 +25,20 @@ type ExitEvent = {
 export type RendererToMainIpcChannels = {
   "window:create": () => Promise<boolean>;
   "term:init": (windowId: number, shell?: string) => Promise<number>;
-  "term:data": (windowId: number, termId: number, data: string) => void;
-  "pty:kill": (windowId: number, termId: number) => boolean;
-  "pty:resize": (windowId: number, termId: number, data: ResizeData) => void;
+  "term:data": (
+    windowId: number,
+    termId: number,
+    data: string,
+  ) => Promise<void>;
+  "pty:kill": (windowId: number, termId: number) => Promise<boolean>;
+  "pty:resize": (
+    windowId: number,
+    termId: number,
+    data: ResizeData,
+  ) => Promise<void>;
   "shell:list": () => Promise<Shell[]>;
-  "os:platform": () => string;
-};
+  "os:platform": () => Promise<string>;
+} & SettingsChannel;
 
 export const createIPCMainHandler = <T extends keyof RendererToMainIpcChannels>(
   channel: T,
@@ -44,11 +53,9 @@ export const createIPCMainHandler = <T extends keyof RendererToMainIpcChannels>(
 
 export const inovkeIPCMainHandler = <T extends keyof RendererToMainIpcChannels>(
   channel: T,
-) => {
-  return (...args: Parameters<RendererToMainIpcChannels[T]>) =>
-    ipcRenderer.invoke(channel, ...args) as ReturnType<
-      RendererToMainIpcChannels[T]
-    >;
+): RendererToMainIpcChannels[T] => {
+  //@ts-ignore
+  return (...args) => ipcRenderer.invoke(channel, ...args);
 };
 
 /* 
