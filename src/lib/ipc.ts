@@ -80,8 +80,10 @@ export const createIPCRendererHandler = <
       _event: IpcRendererEvent,
       ...args: MainToRendererIpcChannels[T]
     ) => void,
+  ) => {
     // @ts-ignore
-  ) => ipcRenderer.on(channel, callback);
+    ipcRenderer.on(channel, callback);
+  };
 };
 
 export const invokeIPCRendererHandler = <

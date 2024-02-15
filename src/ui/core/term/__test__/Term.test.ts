@@ -51,7 +51,7 @@ describe("Term", async () => {
   it("should load addons and register event handlers", () => {
     const manager = new TabManager();
     const tab = new Tab(manager);
-    const term = new Term(tab, 1);
+    const term = new Term(tab, 1, {});
 
     // @ts-ignore private method
     expect(term.loadXtermAddons).toHaveBeenCalledOnce();
@@ -62,7 +62,7 @@ describe("Term", async () => {
   it("should resize both xterm and pty", () => {
     const manager = new TabManager();
     const tab = new Tab(manager);
-    const term = new Term(tab, 1);
+    const term = new Term(tab, 1, {});
 
     term.resize();
     expect(window.api.resizePty).toHaveBeenCalledOnce();
@@ -73,7 +73,7 @@ describe("Term", async () => {
   it("resizes after inserted into the DOM", () => {
     const manager = new TabManager();
     const tab = new Tab(manager);
-    const term = new Term(tab, 1);
+    const term = new Term(tab, 1, {});
 
     vi.spyOn(term, "resize");
     vi.useFakeTimers();
