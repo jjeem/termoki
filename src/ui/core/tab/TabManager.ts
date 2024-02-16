@@ -2,7 +2,8 @@ import createHTMLElement from "../../utils/createElement";
 import Tab from "./index";
 // @ts-ignore TODO: declare png & svg
 import logo from "../../../../media/logo.png";
-import { Shell } from "src/ui/types";
+import { Shell } from "../../types";
+import createDropdown from "../../utils/dropdown";
 
 const api = window.api;
 
@@ -54,9 +55,22 @@ const createUi = async (createTab: (shell?: string) => Tab) => {
     createTab();
   });
 
-  // TODO: move opening settings file to app menu when implemented
   logoElement.addEventListener("click", () => {
-    console.log(api.openSettings());
+    createDropdown({
+      x: logoElement.getBoundingClientRect().right,
+      y: logoElement.getBoundingClientRect().bottom,
+      list: [
+        {
+          label: "new tab",
+          onClick: () => createTab(),
+        },
+        {
+          label: "open settings",
+          command: "Ctrl+t",
+          onClick: api.openSettings,
+        },
+      ]
+    })
   });
 
   // call async stuff here after embedding the elements
