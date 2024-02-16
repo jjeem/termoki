@@ -12,9 +12,6 @@ type DropdownProps = {
   list: DropdownItem[];
 };
 
-/**
- * TODO: not completed yet
- */
 function createDropdown({ x, y, list }: DropdownProps): HTMLElement {
   console.log({ x, y });
 

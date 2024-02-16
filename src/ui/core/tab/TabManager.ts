@@ -69,8 +69,8 @@ const createUi = async (createTab: (shell?: string) => Tab) => {
           command: "Ctrl+t",
           onClick: api.openSettings,
         },
-      ]
-    })
+      ],
+    });
   });
 
   // call async stuff here after embedding the elements
