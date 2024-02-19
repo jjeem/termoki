@@ -10,7 +10,7 @@ if (require("electron-squirrel-startup")) {
   electronApp.quit();
 }
 
-const app = new App();
+const app = App.getApp();
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

@@ -35,6 +35,8 @@ export const registerAPI = (windowId: number) => {
         ReturnType<typeof createIPCRendererHandler<`term:exit:${typeof id}`>>
       >[0],
     ) => createIPCRendererHandler(`term:exit:${id}`)(callback),
+
+    onSettingsChange: createIPCRendererHandler("settings:updated"),
   };
 
   // Use `contextBridge` APIs to expose Electron APIs to

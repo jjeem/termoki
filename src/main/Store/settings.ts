@@ -1,6 +1,7 @@
 import { app, shell } from "electron";
-import { readFileSync, existsSync, writeFile } from "node:fs";
-import { createIPCMainHandler } from "../../lib/ipc";
+import { readFileSync, existsSync, writeFile, watchFile } from "node:fs";
+import App from "../App";
+import { createIPCMainHandler, invokeIPCRendererHandler } from "../../lib/ipc";
 import defaultSettings from "../../defaults/settings.json";
 import { isDevEnvironment } from "../../lib/isDev";
 
@@ -11,10 +12,14 @@ const SETTINGS_FILE_PATH = isDevEnvironment()
   ? `${app.getAppPath()}/_ignored/settings.json`
   : `${app.getAppPath()}/settings.json`;
 
-export type SettingsChannel = {
+export type SettingsRendererChannels = {
   settings(): Promise<Settings>;
   "settings:record"<T extends keyof Settings>(key: T): Promise<Settings[T]>;
   "openfile:settings": () => Promise<string>;
+};
+
+export type SettingsMainChannels = {
+  "settings:updated": [Settings];
 };
 
 class SettingsStore {
@@ -28,6 +33,8 @@ class SettingsStore {
     createIPCMainHandler("openfile:settings", async () =>
       shell.openPath(SETTINGS_FILE_PATH),
     );
+
+    this.watch();
   }
 
   private readFromDataFile() {
@@ -60,6 +67,20 @@ class SettingsStore {
       console.error(error);
       return defaultSettings;
     }
+  }
+
+  private watch() {
+    watchFile(SETTINGS_FILE_PATH, () => {
+      console.log("settings file changed, emitting updates now...");
+      this.settings = this.readFromDataFile();
+      App.getApp().termokiWindows.forEach((termokiWin) => {
+        invokeIPCRendererHandler(
+          "settings:updated",
+          termokiWin.window,
+          this.settings,
+        );
+      });
+    });
   }
 
   get(): Settings;

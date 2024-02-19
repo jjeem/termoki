@@ -71,6 +71,14 @@ export class Term {
     this.openXterm();
   }
 
+  set options(val: ITerminalOptions) {
+    this.xterm.options = val;
+  }
+
+  get options() {
+    return this.xterm.options;
+  }
+
   private registerHandlers(id: number) {
     api.onResponse(id, (_event, data) => {
       this.xterm.write(data);

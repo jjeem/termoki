@@ -5,7 +5,10 @@ import {
   type IpcMainInvokeEvent,
   type IpcRendererEvent,
 } from "electron";
-import { SettingsChannel } from "../main/Store/settings";
+import type {
+  SettingsMainChannels,
+  SettingsRendererChannels,
+} from "../main/Store/settings";
 
 type Shell = {
   label: string;
@@ -38,7 +41,7 @@ export type RendererToMainIpcChannels = {
   ) => Promise<void>;
   "shell:list": () => Promise<Shell[]>;
   "os:platform": () => Promise<string>;
-} & SettingsChannel;
+} & SettingsRendererChannels;
 
 export const createIPCMainHandler = <T extends keyof RendererToMainIpcChannels>(
   channel: T,
@@ -59,7 +62,7 @@ export const inovkeIPCMainHandler = <T extends keyof RendererToMainIpcChannels>(
 };
 
 /* 
-  TODO: implment data flow control to avoid these dynamic channels and simplify usage.
+  TODO: implment pty data flow control to avoid these dynamic channels and simplify usage.
         maybe this is not needed and it can work fine with one channel. hmm?
 */
 export type MainToRendererIpcChannels = {
@@ -68,7 +71,7 @@ export type MainToRendererIpcChannels = {
   [key in `term:response:${number}`]: [string];
 } & {
   [key in `term:exit:${number}`]: [ExitEvent];
-};
+} & SettingsMainChannels;
 
 export const createIPCRendererHandler = <
   T extends keyof MainToRendererIpcChannels,

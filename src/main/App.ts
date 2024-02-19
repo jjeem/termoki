@@ -6,6 +6,9 @@ import { createIPCMainHandler } from "../lib/ipc";
 import { Store } from "./Store";
 
 const registerIPCMainhandlers = (app: App) => {
+  // call the store here to make sure its handlers are registered
+  Store.getStore();
+
   createIPCMainHandler("shell:list", async () => await detectAvailableShells());
 
   createIPCMainHandler("os:platform", async () => process.platform);
@@ -68,9 +71,19 @@ const registerIPCMainhandlers = (app: App) => {
 
 class App {
   termokiWindows: TermokiWindow[] = [];
+  private static app: App | null = null;
 
-  constructor() {
+  private constructor() {
     registerIPCMainhandlers(this);
+  }
+
+  static getApp() {
+    if (App.app) {
+      return App.app;
+    }
+
+    App.app = new App();
+    return App.app;
   }
 
   createTermokiWindow() {

@@ -4,6 +4,7 @@ import Tab from "./index";
 import logo from "../../../../media/logo.png";
 import { Shell } from "../../types";
 import createDropdown from "../../utils/dropdown";
+import loadWindowStyle from "../../utils/loadWindowStyle";
 
 const api = window.api;
 
@@ -62,11 +63,11 @@ const createUi = async (createTab: (shell?: string) => Tab) => {
       list: [
         {
           label: "new tab",
+          command: "Ctrl+t",
           onClick: () => createTab(),
         },
         {
           label: "open settings",
-          command: "Ctrl+t",
           onClick: api.openSettings,
         },
       ],
@@ -81,8 +82,19 @@ const createUi = async (createTab: (shell?: string) => Tab) => {
 };
 
 const renderUi = (createTab: (shell?: string) => Tab) => {
+  loadWindowStyle();
   createUi(createTab);
   return createTab();
+};
+
+const registerHandlers = (tabManager: TabManager) => {
+  api.onSettingsChange((_, settings) => {
+    tabManager.tabs.forEach((tab) =>
+      tab.updateTermsOptions(settings["terminal.config"]),
+    );
+
+    loadWindowStyle();
+  });
 };
 
 class TabManager {
@@ -91,6 +103,8 @@ class TabManager {
 
   constructor() {
     this.activeTab = renderUi(this.createTab.bind(this));
+
+    registerHandlers(this);
   }
 
   createTab(shell?: string) {

@@ -39,7 +39,7 @@ function createDropdown({ x, y, list }: DropdownProps): HTMLElement {
 
     let commandElement: HTMLSpanElement | undefined;
     if (item.command) {
-      commandElement = createHTMLElement("span", "command-text");
+      commandElement = createHTMLElement("span", "dropdown__command");
       commandElement.innerText = item.command;
     }
 
