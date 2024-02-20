@@ -21,6 +21,7 @@ export const apiMock: Window["api"] = {
     ) => {},
   ),
   killPty: vi.fn(async (id: number) => true),
+  copyText: vi.fn(),
   getSettings: vi.fn(async () => defaultSettings),
   getSettingsByKey: vi.fn(
     async <T extends keyof Settings>(key: T) => defaultSettings[key],
