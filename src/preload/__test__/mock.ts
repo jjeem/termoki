@@ -26,6 +26,7 @@ export const apiMock: Window["api"] = {
     async <T extends keyof Settings>(key: T) => defaultSettings[key],
   ),
   openSettings: vi.fn(async () => ""),
+  resetSettings: vi.fn(),
 
   onResize: vi.fn((callback: (e: IpcRendererEvent) => void) => null),
   onResponse: vi.fn(
@@ -42,4 +43,5 @@ export const apiMock: Window["api"] = {
       callback: (...args: any[]) => void,
     ) => callback(true),
   ),
+  onSettingsChange: vi.fn(),
 };
