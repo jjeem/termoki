@@ -70,6 +70,10 @@ const createUi = async (createTab: (shell?: string) => Tab) => {
           label: "open settings",
           onClick: api.openSettings,
         },
+        {
+          label: "reset settings to defaults",
+          onClick: api.resetSettings,
+        },
       ],
     });
   });

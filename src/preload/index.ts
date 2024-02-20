@@ -18,6 +18,7 @@ export const registerAPI = (windowId: number) => {
     getSettings: inovkeIPCMainHandler("settings"),
     getSettingsByKey: inovkeIPCMainHandler("settings:record"),
     openSettings: inovkeIPCMainHandler("openfile:settings"),
+    resetSettings: inovkeIPCMainHandler("settings:reset"),
 
     onResize: createIPCRendererHandler("term:resize"),
     onResponse: (

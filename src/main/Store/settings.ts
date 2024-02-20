@@ -1,4 +1,4 @@
-import { app, shell } from "electron";
+import { app, dialog, shell, BrowserWindow } from "electron";
 import { readFileSync, existsSync, writeFile, watchFile } from "node:fs";
 import App from "../App";
 import { createIPCMainHandler, invokeIPCRendererHandler } from "../../lib/ipc";
@@ -15,7 +15,8 @@ const SETTINGS_FILE_PATH = isDevEnvironment()
 export type SettingsRendererChannels = {
   settings(): Promise<Settings>;
   "settings:record"<T extends keyof Settings>(key: T): Promise<Settings[T]>;
-  "openfile:settings": () => Promise<string>;
+  "settings:reset": () => Promise<void>;
+  "openfile:settings": () => Promise<string>; // returns error string if exists
 };
 
 export type SettingsMainChannels = {
@@ -30,6 +31,18 @@ class SettingsStore {
 
     createIPCMainHandler("settings", async () => this.get());
     createIPCMainHandler("settings:record", async (_, key) => this.get(key));
+    createIPCMainHandler("settings:reset", async () => {
+      const res = await dialog.showMessageBox({
+        type: "warning",
+        message:
+          "You are about to replace your current settings with the defaults.\nYou cannot undo this action, are you sure?",
+        buttons: ["cancel", "yes"],
+        defaultId: 0,
+      });
+      if (res.response === 1) {
+        this.resetSettings();
+      }
+    });
     createIPCMainHandler("openfile:settings", async () =>
       shell.openPath(SETTINGS_FILE_PATH),
     );
@@ -48,19 +61,7 @@ class SettingsStore {
         return { ...defaultSettings, ...settings };
       }
 
-      writeFile(
-        SETTINGS_FILE_PATH,
-        JSON.stringify(defaultSettings, null, 2),
-        "utf-8",
-        (error) => {
-          if (error) {
-            console.log(
-              `Creating settings file FAILED in path: ${SETTINGS_FILE_PATH}`,
-            );
-            console.error(error);
-          }
-        },
-      );
+      this.writeToSettingsFile(defaultSettings);
 
       return defaultSettings;
     } catch (error) {
@@ -73,14 +74,48 @@ class SettingsStore {
     watchFile(SETTINGS_FILE_PATH, () => {
       console.log("settings file changed, emitting updates now...");
       this.settings = this.readFromDataFile();
+      this.emitUpdate(this.settings);
+    });
+  }
+
+  private writeToSettingsFile(value: Settings, callback?: () => void) {
+    this.settings = value;
+    try {
+      writeFile(
+        SETTINGS_FILE_PATH,
+        JSON.stringify(value, null, 2),
+        "utf-8",
+        (error) => {
+          if (error) {
+            throw error;
+          }
+
+          callback?.();
+        },
+      );
+    } catch (error) {
+      console.error("Error during updating settings file, ", error);
+    }
+  }
+
+  private emitUpdate(updatedSettings: Settings) {
+    try {
       App.getApp().termokiWindows.forEach((termokiWin) => {
         invokeIPCRendererHandler(
           "settings:updated",
           termokiWin.window,
-          this.settings,
+          updatedSettings,
         );
       });
-    });
+    } catch (error) {
+      console.error("Error during emitting updated settings, ", error);
+    }
+  }
+
+  resetSettings() {
+    this.writeToSettingsFile(defaultSettings, () =>
+      this.emitUpdate(defaultSettings),
+    );
   }
 
   get(): Settings;
