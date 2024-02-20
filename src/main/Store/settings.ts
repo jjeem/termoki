@@ -1,5 +1,10 @@
-import { app, dialog, shell, BrowserWindow } from "electron";
-import { readFileSync, existsSync, writeFile, watchFile } from "node:fs";
+import { app, dialog, shell } from "electron";
+import {
+  readFileSync,
+  existsSync,
+  writeFile,
+  watch as fs_watch,
+} from "node:fs";
 import App from "../App";
 import { createIPCMainHandler, invokeIPCRendererHandler } from "../../lib/ipc";
 import defaultSettings from "../../defaults/settings.json";
@@ -71,7 +76,7 @@ class SettingsStore {
   }
 
   private watch() {
-    watchFile(SETTINGS_FILE_PATH, () => {
+    fs_watch(SETTINGS_FILE_PATH, () => {
       console.log("settings file changed, emitting updates now...");
       this.settings = this.readFromDataFile();
       this.emitUpdate(this.settings);
