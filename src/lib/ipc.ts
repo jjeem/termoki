@@ -41,6 +41,7 @@ export type RendererToMainIpcChannels = {
   ) => Promise<void>;
   "shell:list": () => Promise<Shell[]>;
   "os:platform": () => Promise<string>;
+  "editor:copy": (text: string) => Promise<void>;
 } & SettingsRendererChannels;
 
 export const createIPCMainHandler = <T extends keyof RendererToMainIpcChannels>(

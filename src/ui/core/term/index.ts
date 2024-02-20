@@ -71,14 +71,6 @@ export class Term {
     this.openXterm();
   }
 
-  set options(val: ITerminalOptions) {
-    this.xterm.options = val;
-  }
-
-  get options() {
-    return this.xterm.options;
-  }
-
   private registerHandlers(id: number) {
     api.onResponse(id, (_event, data) => {
       this.xterm.write(data);
@@ -121,6 +113,18 @@ export class Term {
   private openXterm() {
     this.xterm.open(this.container);
     setTimeout(() => this.resize(), 10);
+  }
+
+  set options(val: ITerminalOptions) {
+    this.xterm.options = val;
+  }
+
+  get options() {
+    return this.xterm.options;
+  }
+
+  get selection() {
+    return this.xterm.getSelection();
   }
 
   attachCustomKeyEventHandler(
@@ -240,6 +244,17 @@ async function createTerm(
       handleSplit(term, "down");
       return false;
     }
+    if (e.key === "C" && e.ctrlKey && e.shiftKey && !e.altKey) {
+      const text = term.selection.trim();
+
+      if (text) {
+        api.copyText(text);
+        return false;
+      }
+      // otherwise process it
+      return true;
+    }
+
     return true;
   });
 

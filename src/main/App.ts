@@ -1,4 +1,4 @@
-import { app as electronApp } from "electron";
+import { clipboard, app as electronApp } from "electron";
 import { detectAvailableShells } from "@jjeem/detect-shell";
 import TermokiWindow from "./TermokiWindow";
 import ShellProcess from "./pty/ShellProcess";
@@ -66,6 +66,10 @@ const registerIPCMainhandlers = (app: App) => {
     termokiWindow.shellProcesses.push(shellProcess);
 
     return shellProcess.id;
+  });
+
+  createIPCMainHandler("editor:copy", async (_event, text) => {
+    clipboard.writeText(text);
   });
 };
 
