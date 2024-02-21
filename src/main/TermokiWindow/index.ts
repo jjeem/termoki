@@ -2,7 +2,7 @@ import { BrowserWindow } from "electron";
 import createWindow from "../createWindow";
 import ShellProcess from "../pty/ShellProcess";
 import App from "../App";
-import { invokeIPCRendererHandler } from "../../shared/ipc";
+import { invokeIPCRendererHandler } from "../../lib/ipc";
 
 class TermokiWindow {
   static idPointer = 1;

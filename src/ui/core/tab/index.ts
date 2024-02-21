@@ -1,6 +1,7 @@
 import TabManager from "./TabManager";
 import createTerm, { Term } from "../term";
 import createHTMLElement from "../../utils/createElement";
+import type { ITerminalOptions } from "xterm";
 
 class Tab {
   static idPointer = 1;
@@ -56,6 +57,12 @@ class Tab {
 
   resize() {
     this.terms.forEach((term) => term.resize());
+  }
+
+  updateTermsOptions(options: ITerminalOptions) {
+    this.terms.forEach((term) => {
+      term.options = options;
+    });
   }
 
   private onClose() {

@@ -16,7 +16,7 @@ const defaultConfig: ITerminalOptions = {
   fontSize: 14,
   letterSpacing: 0,
   theme: {
-    background: "#2E3440",
+    background: "#2e3440",
     foreground: "#F8F8F0",
     cursor: "#0059ae",
     cursorAccent: "#ffffff99",
@@ -45,7 +45,7 @@ export class Term {
   id: number;
   shell?: string;
   tab: Tab;
-  private xterm = new Terminal(defaultConfig);
+  private xterm;
   private fitAddon = new FitAddon();
   private webglAddon = new WebglAddon();
   private unicode11Addon = new Unicode11Addon();
@@ -56,6 +56,7 @@ export class Term {
   constructor(
     tab: Tab,
     id: number,
+    config: ITerminalOptions,
     shell?: string, // name (bash.exe) or path
     splitPane?: SplitPane,
   ) {
@@ -63,10 +64,19 @@ export class Term {
     this.id = id;
     this.shell = shell;
     this.splitPane = splitPane;
+    this.xterm = new Terminal(config);
 
     this.loadXtermAddons();
     this.registerHandlers(id);
     this.openXterm();
+  }
+
+  set options(val: ITerminalOptions) {
+    this.xterm.options = val;
+  }
+
+  get options() {
+    return this.xterm.options;
   }
 
   private registerHandlers(id: number) {
@@ -89,7 +99,11 @@ export class Term {
     });
   }
 
-  private loadWebGl() {
+  private async loadWebGl() {
+    const shouldUseWebGL = await api.getSettingsByKey("terminal.webgl");
+
+    if (!shouldUseWebGL) return;
+
     this.webglAddon.onContextLoss(() => {
       this.webglAddon.dispose();
     });
@@ -123,6 +137,7 @@ export class Term {
 
   focus() {
     this.xterm.focus();
+    this.resize();
   }
 
   blur() {
@@ -205,7 +220,10 @@ async function createTerm(
   splitPane?: SplitPane,
 ): Promise<Term> {
   const id = await api.initPtyProcess(window.id, shell);
-  const term = new Term(tab, id, shell, splitPane);
+  const termConfig = await api.getSettingsByKey("terminal.config");
+  const config = { ...defaultConfig, ...termConfig };
+
+  const term = new Term(tab, id, config, shell, splitPane);
 
   // TODO: abstract
   term.attachCustomKeyEventHandler((e) => {

@@ -2,7 +2,9 @@ import createHTMLElement from "../../utils/createElement";
 import Tab from "./index";
 // @ts-ignore TODO: declare png & svg
 import logo from "../../../../media/logo.png";
-import { Shell } from "src/ui/types";
+import { Shell } from "../../types";
+import createDropdown from "../../utils/dropdown";
+import loadWindowStyle from "../../utils/loadWindowStyle";
 
 const api = window.api;
 
@@ -54,6 +56,28 @@ const createUi = async (createTab: (shell?: string) => Tab) => {
     createTab();
   });
 
+  logoElement.addEventListener("click", () => {
+    createDropdown({
+      x: logoElement.getBoundingClientRect().right,
+      y: logoElement.getBoundingClientRect().bottom,
+      list: [
+        {
+          label: "new tab",
+          command: "Ctrl+t",
+          onClick: () => createTab(),
+        },
+        {
+          label: "open settings",
+          onClick: api.openSettings,
+        },
+        {
+          label: "reset settings to defaults",
+          onClick: api.resetSettings,
+        },
+      ],
+    });
+  });
+
   // call async stuff here after embedding the elements
   prepareShellSelect(createTab, shellSelectELement);
   // on macOS, move logo to the right side
@@ -62,8 +86,19 @@ const createUi = async (createTab: (shell?: string) => Tab) => {
 };
 
 const renderUi = (createTab: (shell?: string) => Tab) => {
+  loadWindowStyle();
   createUi(createTab);
   return createTab();
+};
+
+const registerHandlers = (tabManager: TabManager) => {
+  api.onSettingsChange((_, settings) => {
+    tabManager.tabs.forEach((tab) =>
+      tab.updateTermsOptions(settings["terminal.config"]),
+    );
+
+    loadWindowStyle();
+  });
 };
 
 class TabManager {
@@ -72,6 +107,8 @@ class TabManager {
 
   constructor() {
     this.activeTab = renderUi(this.createTab.bind(this));
+
+    registerHandlers(this);
   }
 
   createTab(shell?: string) {

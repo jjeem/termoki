@@ -2,11 +2,23 @@
   --main-bg: #2e3440;
   --tab-bg: #011627;
   --tab-active: #5f7e97;
+  --tab-active-text: #ffffff;
   --tab-hover: #082c4c;
+  --tab-button-bg: #01162700;
+  --tab-button-text: #ffffff;
+  --new-tab-button-text: #ffffff;
+  --new-tab-button-hover: #ffffff3f;
+  --close-tab-button-text: #ffffff;
+  --dropdown-text: #ffffff;
+  --dropdown-bg: var(--tab-bg);
+  --dropdown-border: #7b9fbc7b;
+  --dropdown-command: #7b9fbcc7;
+  --dropdown__item-hover: #7b9fbc7b;
   --resizer: #2c73dd9c;
   --scroll-thumb-bg: #7ca0a74d;
   --scroll-thumb-hover: #7cc8d7a4;
   font-family: Consolas, Menlo, Courier New, monospace;
+  font-size: 14px;
 }
 
 *,
@@ -31,28 +43,38 @@ body {
 }
 
 .dropdown {
-  list-style: none;
+  font-size: 0.8rem;
   position: fixed;
-  padding: 12px 4px;
-  left: 300px;
-  top: 300px;
-  z-index: 10;
-  background-color: var(--tab-bg);
-  color: white;
+  padding: 12px 2px;
+  z-index: 11;
+  background-color: var(--dropdown-bg);
+  color: var(--dropdown-text);
+  border: solid 1px var(--dropdown-border);
   border-radius: 12px;
+  outline: none;
 }
 
 .dropdown__item {
-  cursor: pointer;
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  align-items: center;
   padding: 4px 12px;
   border-radius: 4px;
+  cursor: pointer;
   user-select: none;
 }
 .dropdown__item:hover {
-  background-color: #7b9fbc7b;
+  background-color: var(--dropdown__item-hover);
 }
 .dropdown__item:active {
   background-color: var(--tab-active);
+}
+
+.dropdown__command {
+  font-size: 0.7rem;
+  color: var(--dropdown-command);
 }
 
 .xterm-viewport::-webkit-scrollbar {
@@ -84,22 +106,18 @@ body {
   aspect-ratio: 1;
   width: 22px;
   height: 22px;
-  /* margin: 8px 12px; */
+  cursor: pointer;
   -webkit-app-region: no-drag;
 }
 
 .nav {
   display: flex;
   align-items: end;
-  /* position: fixed; */
-  /* z-index: 10; */
   top: 0;
   left: 0;
-  /* width: calc(100% - 136px); */
   width: 100%;
   min-height: 30px;
   background-color: var(--tab-bg);
-  /* -webkit-app-region: drag; */
 }
 
 .nav-list {
@@ -114,16 +132,16 @@ body {
 }
 
 .tab-button {
-  color: whitesmoke;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* width: 80px; */
   padding: 2px 8px;
-  /* border-right: solid 1px gray; */
+  background-color: var(--tab-button-bg);
+  color: var(--tab-button-text);
+  text-overflow: ellipsis;
+  text-wrap: nowrap;
   cursor: pointer;
   user-select: none;
-  text-overflow: ellipsis;
 }
 .tab-button:hover {
   background-color: var(--tab-hover);
@@ -133,7 +151,7 @@ body {
   width: 24px;
   height: 24px;
   margin: 3px;
-  color: white;
+  color: var(--new-tab-button-text);
   cursor: pointer;
   font-size: 16px;
   background-color: transparent;
@@ -142,16 +160,16 @@ body {
   -webkit-app-region: no-drag;
 }
 .new-tab-button:hover {
-  background-color: #ffffff3f;
+  background-color: var(--new-tab-button-hover);
 }
 
 .active-tab {
-  color: white;
+  color: var(--tab-active-text);
   background-color: var(--tab-active);
   border-radius: 0 12px 0 0;
 }
 .active-tab:hover {
-  color: white;
+  color: var(--tab-active-text);
   background-color: var(--tab-active);
 }
 
@@ -160,7 +178,7 @@ body {
   /* height: 20px; */
   height: 100%;
   margin: 2px 0 2px 12px;
-  color: white;
+  color: var(--close-tab-button-text);
   cursor: pointer;
   font-size: 16px;
   background-color: transparent;

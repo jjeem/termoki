@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from "electron";
-import { inovkeIPCMainHandler, createIPCRendererHandler } from "../shared/ipc";
+import { inovkeIPCMainHandler, createIPCRendererHandler } from "../lib/ipc";
 
 ipcRenderer.once("id", (_event, id: number) => {
   registerAPI(id);
@@ -15,6 +15,10 @@ export const registerAPI = (windowId: number) => {
     initPtyProcess: inovkeIPCMainHandler("term:init"),
     resizePty: inovkeIPCMainHandler("pty:resize"),
     killPty: inovkeIPCMainHandler("pty:kill"),
+    getSettings: inovkeIPCMainHandler("settings"),
+    getSettingsByKey: inovkeIPCMainHandler("settings:record"),
+    openSettings: inovkeIPCMainHandler("openfile:settings"),
+    resetSettings: inovkeIPCMainHandler("settings:reset"),
 
     onResize: createIPCRendererHandler("term:resize"),
     onResponse: (
@@ -32,6 +36,8 @@ export const registerAPI = (windowId: number) => {
         ReturnType<typeof createIPCRendererHandler<`term:exit:${typeof id}`>>
       >[0],
     ) => createIPCRendererHandler(`term:exit:${id}`)(callback),
+
+    onSettingsChange: createIPCRendererHandler("settings:updated"),
   };
 
   // Use `contextBridge` APIs to expose Electron APIs to

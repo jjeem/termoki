@@ -10,6 +10,7 @@ import logo from "../../media/logo.png";
 const HIDE_WINDOW_FRAME =
   process.platform === "darwin" || process.platform === "win32";
 
+// TODO: make it configurable through settings
 const defaultWindowOptions: BrowserWindowConstructorOptions = {
   icon: logo,
   width: 800,
@@ -17,7 +18,7 @@ const defaultWindowOptions: BrowserWindowConstructorOptions = {
   frame: !HIDE_WINDOW_FRAME,
   titleBarStyle: HIDE_WINDOW_FRAME ? "hidden" : "default",
   titleBarOverlay: {
-    color: "#011627",
+    color: "#01162700", // 0 opacity until it's configurable
     symbolColor: "#e8e5e5",
     height: 30,
   },

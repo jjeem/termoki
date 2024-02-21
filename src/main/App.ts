@@ -1,31 +1,35 @@
-import { app as electronApp } from "electron";
+import { dialog, app as electronApp } from "electron";
 import { detectAvailableShells } from "@jjeem/detect-shell";
 import TermokiWindow from "./TermokiWindow";
 import ShellProcess from "./pty/ShellProcess";
-import { createIPCMainHandler } from "../shared/ipc";
+import { createIPCMainHandler } from "../lib/ipc";
+import { Store } from "./Store";
 
 const registerIPCMainhandlers = (app: App) => {
+  // call the store here to make sure its handlers are registered
+  const store = Store.getStore();
+
   createIPCMainHandler("shell:list", async () => await detectAvailableShells());
 
-  createIPCMainHandler("os:platform", () => process.platform);
+  createIPCMainHandler("os:platform", async () => process.platform);
 
   createIPCMainHandler("window:create", async () => {
     app.createTermokiWindow();
     return true;
   });
 
-  createIPCMainHandler("pty:kill", (_event, windowId, termId) => {
+  createIPCMainHandler("pty:kill", async (_event, windowId, termId) => {
     const window = app.getWindowById(windowId);
     window?.disposeProcessWithId(termId);
     return true;
   });
 
-  createIPCMainHandler("term:data", (_event, windowId, termId, data) => {
+  createIPCMainHandler("term:data", async (_event, windowId, termId, data) => {
     const window = app.getWindowById(windowId);
     window?.getProcessById(termId)?.shell.write(data);
   });
 
-  createIPCMainHandler("pty:resize", (_event, windowId, termId, data) => {
+  createIPCMainHandler("pty:resize", async (_event, windowId, termId, data) => {
     const { cols, rows } = data;
     const window = app.getWindowById(windowId);
     window?.getProcessById(termId)?.shell.resize(cols, rows);
@@ -40,11 +44,16 @@ const registerIPCMainhandlers = (app: App) => {
     }
 
     if (!shellPath) {
-      await detectAvailableShells().then((list) => {
-        shellPath =
-          list.find((shell) => /(git)/gi.test(shell.label))?.path ||
-          list[0].path;
-      });
+      const defaultShell = store.settings.get("shell");
+      if (typeof defaultShell === "string" && !!defaultShell) {
+        shellPath = defaultShell;
+      } else {
+        await detectAvailableShells().then((list) => {
+          shellPath =
+            list.find((shell) => /(git)/gi.test(shell.label))?.path ||
+            list[0].path;
+        });
+      }
     }
 
     console.log("shell name or path: ", shellPath);
@@ -52,19 +61,54 @@ const registerIPCMainhandlers = (app: App) => {
       throw new Error("No shells found");
     }
 
-    const shellProcess = new ShellProcess(termokiWindow.window, shellPath);
+    const args: string[] = [];
+    const cwd = store.settings.get("shell.cwd");
+    try {
+      const shellProcess = new ShellProcess(
+        termokiWindow.window,
+        shellPath,
+        args,
+        { cwd },
+      );
+      termokiWindow.shellProcesses.push(shellProcess);
 
-    termokiWindow.shellProcesses.push(shellProcess);
+      return shellProcess.id;
+    } catch (error) {
+      dialog.showErrorBox(
+        "Error",
+        `failed to spawn pty with current config, falling back to default config. \nthe config: \n${JSON.stringify(
+          {
+            args,
+            cwd,
+          },
+          null,
+          2,
+        )}`,
+      );
 
-    return shellProcess.id;
+      const shellProcess = new ShellProcess(termokiWindow.window, shellPath);
+      termokiWindow.shellProcesses.push(shellProcess);
+
+      return shellProcess.id;
+    }
   });
 };
 
 class App {
   termokiWindows: TermokiWindow[] = [];
+  private static app: App | null = null;
 
-  constructor() {
+  private constructor() {
     registerIPCMainhandlers(this);
+  }
+
+  static getApp() {
+    if (App.app) {
+      return App.app;
+    }
+
+    App.app = new App();
+    return App.app;
   }
 
   createTermokiWindow() {
