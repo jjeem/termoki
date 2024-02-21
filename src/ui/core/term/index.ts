@@ -137,6 +137,7 @@ export class Term {
 
   focus() {
     this.xterm.focus();
+    this.resize();
   }
 
   blur() {
