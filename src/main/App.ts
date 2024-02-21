@@ -1,4 +1,4 @@
-import { app as electronApp } from "electron";
+import { dialog, app as electronApp } from "electron";
 import { detectAvailableShells } from "@jjeem/detect-shell";
 import TermokiWindow from "./TermokiWindow";
 import ShellProcess from "./pty/ShellProcess";
@@ -7,7 +7,7 @@ import { Store } from "./Store";
 
 const registerIPCMainhandlers = (app: App) => {
   // call the store here to make sure its handlers are registered
-  Store.getStore();
+  const store = Store.getStore();
 
   createIPCMainHandler("shell:list", async () => await detectAvailableShells());
 
@@ -44,7 +44,7 @@ const registerIPCMainhandlers = (app: App) => {
     }
 
     if (!shellPath) {
-      const defaultShell = Store.getStore().settings.get("shell");
+      const defaultShell = store.settings.get("shell");
       if (typeof defaultShell === "string" && !!defaultShell) {
         shellPath = defaultShell;
       } else {
@@ -61,11 +61,36 @@ const registerIPCMainhandlers = (app: App) => {
       throw new Error("No shells found");
     }
 
-    const shellProcess = new ShellProcess(termokiWindow.window, shellPath);
+    const args: string[] = [];
+    const cwd = store.settings.get("shell.cwd");
+    try {
+      const shellProcess = new ShellProcess(
+        termokiWindow.window,
+        shellPath,
+        args,
+        { cwd },
+      );
+      termokiWindow.shellProcesses.push(shellProcess);
 
-    termokiWindow.shellProcesses.push(shellProcess);
+      return shellProcess.id;
+    } catch (error) {
+      dialog.showErrorBox(
+        "Error",
+        `failed to spawn pty with current config, falling back to default config. \nthe config: \n${JSON.stringify(
+          {
+            args,
+            cwd,
+          },
+          null,
+          2,
+        )}`,
+      );
 
-    return shellProcess.id;
+      const shellProcess = new ShellProcess(termokiWindow.window, shellPath);
+      termokiWindow.shellProcesses.push(shellProcess);
+
+      return shellProcess.id;
+    }
   });
 };
 

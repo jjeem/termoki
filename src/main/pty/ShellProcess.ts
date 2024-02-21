@@ -37,9 +37,17 @@ class ShellProcess {
     options: PtySpwanOptions = defaultOptions,
   ) {
     this.window = window;
-    this.shell = spawn(shell, args, options);
+    try {
+      this.shell = spawn(shell, args, {
+        ...defaultOptions,
+        ...options,
+      });
 
-    this.subscribeToEvents();
+      this.subscribeToEvents();
+    } catch (error) {
+      console.error("failed to spawn a pty");
+      throw error;
+    }
   }
 
   private subscribeToEvents() {
