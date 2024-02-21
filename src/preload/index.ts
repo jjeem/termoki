@@ -15,6 +15,8 @@ export const registerAPI = (windowId: number) => {
     initPtyProcess: inovkeIPCMainHandler("term:init"),
     resizePty: inovkeIPCMainHandler("pty:resize"),
     killPty: inovkeIPCMainHandler("pty:kill"),
+    copyText: inovkeIPCMainHandler("editor:copy"),
+    // settings actions
     getSettings: inovkeIPCMainHandler("settings"),
     getSettingsByKey: inovkeIPCMainHandler("settings:record"),
     openSettings: inovkeIPCMainHandler("openfile:settings"),
