@@ -20,7 +20,7 @@ const defaultOptions: PtySpwanOptions = {
 		TODO: conpty causes electron to freeze when killing shell sometimes
 		so "false" for now
 	*/
-  useConpty: false,
+  useConpty: true,
 };
 
 class ShellProcess {

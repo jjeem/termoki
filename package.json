@@ -1,7 +1,7 @@
 {
   "name": "termoki",
   "productName": "Termoki",
-  "version": "0.7.1-alpha",
+  "version": "0.8.1-alpha1",
   "author": "Jad Alkheder (@jjeem)",
   "description": "Terminal emulator with web tech",
   "repository": {
@@ -31,7 +31,7 @@
   "dependencies": {
     "@jjeem/detect-shell": "^1.0.2",
     "electron-squirrel-startup": "^1.0.0",
-    "node-pty": "^1.0.0",
+    "node-pty": "1.1.0-beta7",
     "xterm": "^5.3.0",
     "xterm-addon-fit": "^0.8.0",
     "xterm-addon-unicode11": "^0.6.0",
