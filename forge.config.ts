@@ -24,9 +24,19 @@ const config = {
     },
     {
       name: "@electron-forge/maker-deb",
+      config: {
+        options: {
+          icon: "./media/logo.png",
+        },
+      },
     },
     {
       name: "@electron-forge/maker-rpm",
+      config: {
+        options: {
+          icon: "./media/logo.png",
+        },
+      },
     },
   ],
   publishers: [

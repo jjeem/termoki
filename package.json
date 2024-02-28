@@ -1,7 +1,7 @@
 {
   "name": "termoki",
   "productName": "Termoki",
-  "version": "0.8.0-alpha",
+  "version": "0.8.3",
   "author": "Jad Alkheder (@jjeem)",
   "description": "Terminal emulator with web tech",
   "repository": {
