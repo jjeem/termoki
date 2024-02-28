@@ -62,7 +62,7 @@ const registerIPCMainhandlers = (app: App) => {
     }
 
     const args: string[] = [];
-    const cwd = store.settings.get("shell.cwd");
+    const cwd = store.settings.get("shell.cwd") || undefined;
     try {
       const shellProcess = new ShellProcess(
         termokiWindow.window,
