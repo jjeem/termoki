@@ -16,11 +16,6 @@ const defaultOptions: PtySpwanOptions = {
   env: process.env,
   // HOME path not necessarily exists on windows in prodcution
   cwd: process.env.HOME || `${process.env.HOMEDRIVE}${process.env.HOMEPATH}`,
-  /* 
-		TODO: conpty causes electron to freeze when killing shell sometimes
-		so "false" for now
-	*/
-  useConpty: false,
 };
 
 class ShellProcess {

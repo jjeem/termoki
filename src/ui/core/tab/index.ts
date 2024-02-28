@@ -10,11 +10,12 @@ class Tab {
   tabBtn = createHTMLElement("li", "tab-button");
   container = createHTMLElement("div", "tab");
   terms: Term[] = [];
-  private title = "New Tab";
+  private title: string;
   private closeBtn = createHTMLElement("button", "close-tab-button");
 
   constructor(tabManager: TabManager, shell?: string) {
     this.manager = tabManager;
+    this.title = `Tab ${this.id}`;
     const tabBtn = this.tabBtn;
     const closeBtn = this.closeBtn;
     closeBtn.innerText = "x";

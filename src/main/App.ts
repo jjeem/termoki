@@ -56,9 +56,16 @@ const registerIPCMainhandlers = (app: App) => {
       }
     }
 
-    console.log("shell name or path: ", shellPath);
     if (!shellPath) {
       throw new Error("No shells found");
+    }
+
+    let useConpty: boolean | null | undefined =
+      store.settings.get("shell.conPty");
+
+    if (typeof useConpty !== "boolean") {
+      // if user did not set it, let node-pty decide
+      useConpty = undefined;
     }
 
     const args: string[] = [];
@@ -68,7 +75,7 @@ const registerIPCMainhandlers = (app: App) => {
         termokiWindow.window,
         shellPath,
         args,
-        { cwd },
+        { cwd, useConpty },
       );
       termokiWindow.shellProcesses.push(shellProcess);
 

@@ -1,6 +1,7 @@
 {
   "shell": "",
   "shell.cwd": "",
+  "shell.conPty": null,
   "window.style": {
     "--main-bg": "#2e3440",
     "--tab-bg": "#011627",
